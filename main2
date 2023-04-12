@@ -67,7 +67,7 @@ def updateLCD(): #обновление дисплея
 def sed (): #проверка работы элемента
     print ("I'm worked!")
   
-led_data = { #список начальных параметров у светодиода 
+led_data = { #список из словарей с начальными параметрами у светодиодов
     "leds1": {"red": 0, "green": 0, "blue": 0},
     "leds2": {"red": 0, "green": 0, "blue": 0},
     "leds3": {"red": 0, "green": 0, "blue": 0},
@@ -78,11 +78,14 @@ led_data = { #список начальных параметров у свето
     "leds8": {"red": 0, "green": 0, "blue": 0},
 }
 
+
+# практически одинаковое название 3 двух функц
+
 def vkl():
      for led in form.leds:
             #осторожно! Одинаковые названия у объектов Led и JSON.
             led.setStyleSheet(f"background-color: yellow;")
-            led_data[led.objectName()]["red"] = 255
+            led_data[led.objectName()]["red"] = 255 # выставление "цвета" из промежутка 0-255?
             led_data[led.objectName()]["green"] = 255
             led_data[led.objectName()]["blue"] = 0
 
