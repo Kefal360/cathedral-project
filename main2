@@ -1,4 +1,4 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtCore, QtGui, QtWidgets #импорт нужный библиотек
 from PyQt5 import uic
 from PyQt5.QtGui import QColor, QPalette
 from PyQt5.QtGui import QPixmap
@@ -211,12 +211,13 @@ def UpdatePlot(plot, val):
 def Plots(form, valArr):
     widget = QWidget()
     plot = pg.plot() #создает объект PlotWidget из библиотеки PyqtGraph
-    
+    #PlotWidget — это один из базовых конструктовров класса pyqtgraph, отвечающий за работу с 
+    #виджетами, то есть элементами интерфейса, выводящими небольшую информацию
     x = list(range(1, len(valArr)+1))
     bargraph = pg.BarGraphItem(x = x, height = valArr, width = 0.6, brush ='g')
     plot.addItem(bargraph)
     
-    # Creating a grid layout
+    # Создаём grid layout, который отвечает за определение системы макета визуального представления данных
     layout = QGridLayout()
     layout.addWidget(plot, 0,0)
     form.plotwidget.setLayout(layout)
@@ -265,7 +266,7 @@ if __name__ == "__main__":
     form.label_29.hide()
     form.pushButton_4.toggled["bool"].connect(led3)
     
-    form.on_1.hide()
+    form.on_1.hide() 
     form.on_2.hide()
     form.on_3.hide()
 
@@ -288,7 +289,7 @@ if __name__ == "__main__":
     #timer.timeout.connect (update_light)
     #timer.timeout.connect (update_acceleration)
 
-    timer.start()
+    timer.start() #включение таймера для получения параметров для работы системы
 
     form.vkl_b.clicked.connect(vkl)
     form.vikl_b.clicked.connect(vikl)
