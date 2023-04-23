@@ -23,7 +23,7 @@ plot = None
 
 def led1 (checked): #отвечает за включение первого светодиода
     if checked: #класс form это класс нашей формы, то есть окна приложения
-        form.pushButton_2.setText("Выкл") #pushButton - это подклассы, отвечающие за работу кнопок 
+        form.pushButton_2.setText("Выкл") #pushButton - это экземпляры подкласса для работы кнопок
         print("I'm worked too much")
         form.label_24.hide() #label это текст на окне приложения
         form.label_20.show()          
