@@ -97,7 +97,7 @@ def vikl():
             led_data[led.objectName()]["green"] = 0
             led_data[led.objectName()]["blue"] = 0
 
-def color():
+def color(): #функция работы с отображением цвета в программе
         color = QColorDialog.getColor() #получение цвета от диалога
         if color.isValid(): #проверка наличия цвета и применение его над изображением программы
             palette = QPalette()
