@@ -16,14 +16,14 @@ import pyqtgraph as pg
 #import sys
 
 colors = {} #переменная для работы с цветом, позже нам понадобится
-last_clicked_label = None
-plotLen = 20
-valArr = [20] * plotLen
-plot = None
+last_clicked_label = None #Флаг
+plotLen = 20 
+valArr = [20] * plotLen# спико из 20 двадцаток
+plot = None #Флаг
 
 def led1 (checked): #отвечает за включение первого светодиода
     if checked: #класс form это класс нашей формы, то есть окна приложения
-        form.pushButton_2.setText("Выкл") #pushButton - это экземпляры подкласса для работы кнопок
+        form.pushButton_2.setText("Выкл") #pushButton - это экземпляры класса formдля работы кнопок
         print("I'm worked too much")
         form.label_24.hide() #label это текст на окне приложения
         form.label_20.show()          
