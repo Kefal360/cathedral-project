@@ -22,10 +22,10 @@ valArr = [20] * plotLen
 plot = None
 
 def led1 (checked): #отвечает за включение первого светодиода
-    if checked:
-        form.pushButton_2.setText("Выкл")
+    if checked: #класс form это класс нашей формы, то есть окна приложения
+        form.pushButton_2.setText("Выкл") #pushButton - это подклассы, отвечающие за работу кнопок 
         print("I'm worked too much")
-        form.label_24.hide()
+        form.label_24.hide() #label это текст на окне приложения
         form.label_20.show()          
     else:
         form.label_20.hide()
