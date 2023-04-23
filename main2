@@ -18,7 +18,7 @@ import pyqtgraph as pg
 colors = {} #переменная для работы с цветом, позже нам понадобится
 last_clicked_label = None #Флаг
 plotLen = 20 
-valArr = [20] * plotLen# спико из 20 двадцаток
+valArr = [20] * plotLen# список из 20 двадцаток
 plot = None #Флаг
 
 def led1 (checked): #отвечает за включение первого светодиода
