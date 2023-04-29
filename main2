@@ -260,8 +260,8 @@ if __name__ == "__main__":
     Form, Window = uic.loadUiType(conf['uiPath'] + conf['uiFileName'])
 
     app = QApplication(sys.argv)# Создаем экземпляр QApplication и передаем параметры командной строки 
-    window = Window()
-    form = Form()
+    window = Window() #создание экземпляра window класса Window для работы с окном приложения 
+    form = Form() #создание экземпляра form класса Form для работы с формочкой, в которой хранится интерфейс
     form.setupUi(window)
     window.show() # Окна скрыты по умолчанию!
     window.setWindowTitle('Lr4')  #nazvanie
