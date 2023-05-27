@@ -1,0 +1,30 @@
+label_6 = label_temp
+label_13 = label_pressure
+label_14 = label_illumination
+label_15 = label_illumination2
+label_16 = label_rgb_illumination
+label_34 = label_accelorometer
+label_4 = lubel_tumblers
+label = label_url
+label_2 = label_message
+label_7 = label_r
+label_8 = label_g
+label_9 = label_b
+label_10 = label_x
+label_11 = label_y
+label_12 = label_z
+
+label_24 = label_sensor_print1
+label_27 = label_sensor_print2
+label_31 = label_sensor_print3
+label_20 = label_sensor_megalka1
+label_26 = label_sensor_megalka2
+label_29 = label_sensor_megalka3
+
+pushButton = pushButton_send_post
+pushButton_5 = pushButton_send_get_request
+pushButton_2 = pushButton_sensor1
+pushButton_3 = pushButton_sensor2
+pushButton_4 = pushButton_sensor3
+
+
