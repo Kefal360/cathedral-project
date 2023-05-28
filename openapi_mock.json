@@ -1,0 +1,115 @@
+{
+  "uuid": "5ea1e52b-5df9-4503-ab2c-6513fdc53d16",
+  "lastMigration": 27,
+  "name": "Mocks",
+  "endpointPrefix": "",
+  "latency": 0,
+  "port": 3001,
+  "hostname": "",
+  "folders": [],
+  "routes": [
+    {
+      "uuid": "ea43e328-6bbc-43ba-a12a-de222a28fd8b",
+      "type": "http",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "sensval",
+      "responses": [
+        {
+          "uuid": "cead61d4-7745-455c-a3a9-cb8854cefcc2",
+          "body": "{\n  \"LED1\": false,\n  \"LED2\": true,\n  \"LED3\": false,\n  \"button1State\": true,\n  \"button2State\": false,\n  \"button3State\": true,\n  \"temperature\": 25,\n  \"pressure\": 100,\n  \"ambient_light\": 100,\n  \"red_light\": 200,\n  \"green_light\": 300,\n  \"blue_light\": 400,\n  \"lightness\": 500,\n  \"acceleration_x\": 0.1,\n  \"acceleration_y\": 0.2,\n  \"acceleration_z\": 0.3,\n  \"leds1\": {\n    \"red\": 100,\n    \"green\": 150,\n    \"blue\": 200\n  },\n  \"leds2\": {\n    \"red\": 100,\n    \"green\": 150,\n    \"blue\": 200\n  },\n  \"leds3\": {\n    \"red\": 100,\n    \"green\": 150,\n    \"blue\": 200\n  },\n  \"leds4\": {\n    \"red\": 100,\n    \"green\": 150,\n    \"blue\": 200\n  },\n  \"leds5\": {\n    \"red\": 100,\n    \"green\": 150,\n    \"blue\": 200\n  },\n  \"leds6\": {\n    \"red\": 100,\n    \"green\": 150,\n    \"blue\": 200\n  },\n  \"leds7\": {\n    \"red\": 100,\n    \"green\": 150,\n    \"blue\": 200\n  },\n  \"leds8\": {\n    \"red\": 100,\n    \"green\": 150,\n    \"blue\": 200\n  }\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true
+        }
+      ],
+      "enabled": true,
+      "responseMode": null
+    },
+    {
+      "uuid": "166a5c8a-d866-4e93-91c6-c9cf21fbbf04",
+      "type": "http",
+      "documentation": "",
+      "method": "post",
+      "endpoint": "postvalue",
+      "responses": [
+        {
+          "uuid": "a7ae227a-8ca7-49bc-8577-d30af6ee16e9",
+          "body": "POST body was:\n{{body}}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [
+            {
+              "key": "Content-Type",
+              "value": "text/plain"
+            }
+          ],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true
+        }
+      ],
+      "enabled": true,
+      "responseMode": null
+    }
+  ],
+  "rootChildren": [
+    {
+      "type": "route",
+      "uuid": "ea43e328-6bbc-43ba-a12a-de222a28fd8b"
+    },
+    {
+      "type": "route",
+      "uuid": "166a5c8a-d866-4e93-91c6-c9cf21fbbf04"
+    }
+  ],
+  "proxyMode": false,
+  "proxyHost": "",
+  "proxyRemovePrefix": false,
+  "tlsOptions": {
+    "enabled": false,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
+  },
+  "cors": true,
+  "headers": [],
+  "proxyReqHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "proxyResHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "data": []
+}

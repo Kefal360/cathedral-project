@@ -1,0 +1,257 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Mocks",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3001/"
+    }
+  ],
+  "components": {
+    "schemas": {
+      "ValuesRGB": {
+        "type": "object",
+        "properties": {
+          "red": {
+            "type": "number"
+          },
+          "green": {
+            "type": "number"
+          },
+          "blue": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "red",
+          "green",
+          "blue"
+        ]
+      }
+    }
+  },
+  "paths": {
+    "/sensval": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "LED1": {
+                      "type": "boolean"
+                    },
+                    "LED2": {
+                      "type": "boolean"
+                    },
+                    "LED3": {
+                      "type": "boolean"
+                    },
+                    "button1State": {
+                      "type": "boolean"
+                    },
+                    "button2State": {
+                      "type": "boolean"
+                    },
+                    "button3State": {
+                      "type": "boolean"
+                    },
+                    "temperature": {
+                      "type": "number",
+                      "format": "float"
+                    },
+                    "pressure": {
+                      "type": "number",
+                      "format": "float"
+                    },
+                    "ambient_light": {
+                      "type": "number",
+                      "format": "int32"
+                    },
+                    "red_light": {
+                      "type": "number",
+                      "format": "int32"
+                    },
+                    "green_light": {
+                      "type": "number",
+                      "format": "int32"
+                    },
+                    "blue_light": {
+                      "type": "number",
+                      "format": "int32"
+                    },
+                    "lightness": {
+                      "type": "number",
+                      "format": "int32"
+                    },
+                    "acceleration_x": {
+                      "type": "number",
+                      "format": "float"
+                    },
+                    "acceleration_y": {
+                      "type": "number",
+                      "format": "float"
+                    },
+                    "acceleration_z": {
+                      "type": "number",
+                      "format": "float"
+                    },
+                    "leds1": {
+                      "$ref": "#/components/schemas/ValuesRGB"
+                    },
+                    "leds2": {
+                      "$ref": "#/components/schemas/ValuesRGB"
+                    },
+                    "leds3": {
+                      "$ref": "#/components/schemas/ValuesRGB"
+                    },
+                    "leds4": {
+                      "$ref": "#/components/schemas/ValuesRGB"
+                    },
+                    "leds5": {
+                      "$ref": "#/components/schemas/ValuesRGB"
+                    },
+                    "leds6": {
+                      "$ref": "#/components/schemas/ValuesRGB"
+                    },
+                    "leds7": {
+                      "$ref": "#/components/schemas/ValuesRGB"
+                    },
+                    "leds8": {
+                      "$ref": "#/components/schemas/ValuesRGB"
+                    }
+                  },
+                  "example": {
+                    "LED1": false,
+                    "LED2": true,
+                    "LED3": false,
+                    "button1State": true,
+                    "button2State": false,
+                    "button3State": true,
+                    "temperature": 25,
+                    "pressure": 100,
+                    "ambient_light": 100,
+                    "red_light": 200,
+                    "green_light": 300,
+                    "blue_light": 400,
+                    "lightness": 500,
+                    "acceleration_x": 0.1,
+                    "acceleration_y": 0.2,
+                    "acceleration_z": 0.3,
+                    "leds1": {
+                      "red": 100,
+                      "green": 150,
+                      "blue": 200
+                    },
+                    "leds2": {
+                      "red": 100,
+                      "green": 150,
+                      "blue": 200
+                    },
+                    "leds3": {
+                      "red": 100,
+                      "green": 150,
+                      "blue": 200
+                    },
+                    "leds4": {
+                      "red": 100,
+                      "green": 150,
+                      "blue": 200
+                    },
+                    "leds5": {
+                      "red": 100,
+                      "green": 150,
+                      "blue": 200
+                    },
+                    "leds6": {
+                      "red": 100,
+                      "green": 150,
+                      "blue": 200
+                    },
+                    "leds7": {
+                      "red": 100,
+                      "green": 150,
+                      "blue": 200
+                    },
+                    "leds8": {
+                      "red": 100,
+                      "green": 150,
+                      "blue": 200
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        }
+      }
+    },
+    "/postvalue": {
+      "post": {
+        "description": "",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "LED1": {
+                    "type": "boolean"
+                  },
+                  "LED2": {
+                    "type": "boolean"
+                  },
+                  "LED3": {
+                    "type": "boolean"
+                  },
+                  "leds1": {
+                    "$ref": "#/components/schemas/ValuesRGB"
+                  },
+                  "leds2": {
+                    "$ref": "#/components/schemas/ValuesRGB"
+                  },
+                  "leds3": {
+                    "$ref": "#/components/schemas/ValuesRGB"
+                  },
+                  "leds4": {
+                    "$ref": "#/components/schemas/ValuesRGB"
+                  },
+                  "leds5": {
+                    "$ref": "#/components/schemas/ValuesRGB"
+                  },
+                  "leds6": {
+                    "$ref": "#/components/schemas/ValuesRGB"
+                  },
+                  "leds7": {
+                    "$ref": "#/components/schemas/ValuesRGB"
+                  },
+                  "leds8": {
+                    "$ref": "#/components/schemas/ValuesRGB"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "text/plain": {
+                "example": "POST body was:\n{ }"
+              }
+            },
+            "headers": {}
+          }
+        }
+      }
+    }
+  }
+}
