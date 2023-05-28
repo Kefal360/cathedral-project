@@ -22,7 +22,7 @@ label_26 = label_sensor_megalka2
 label_29 = label_sensor_megalka3
 
 pushButton = pushButton_send_post
-pushButton_5 = pushButton_send_get_request
+pushButton_5 = pushButton_send_get
 pushButton_2 = pushButton_sensor1
 pushButton_3 = pushButton_sensor2
 pushButton_4 = pushButton_sensor3

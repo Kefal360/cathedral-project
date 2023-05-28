@@ -397,7 +397,7 @@
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QLabel" name="label_sensor_print3&#10;">
+   <widget class="QLabel" name="label_sensor_print3">
     <property name="geometry">
      <rect>
       <x>570</x>
@@ -986,7 +986,7 @@
      </rect>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_send_get_request">
+   <widget class="QPushButton" name="pushButton_send_get">
     <property name="geometry">
      <rect>
       <x>1050</x>

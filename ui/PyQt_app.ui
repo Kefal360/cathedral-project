@@ -26,7 +26,7 @@
    <string>IoT pgrm v0_1_13</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="pushButton_send_post">
     <property name="geometry">
      <rect>
       <x>1050</x>
@@ -39,7 +39,7 @@
      <string>SEND Post</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label">
+   <widget class="QLabel" name="label_url">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -62,7 +62,7 @@
      </rect>
     </property>
    </widget>
-   <widget class="QLabel" name="label_2">
+   <widget class="QLabel" name="label_message">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -91,7 +91,7 @@
      <double>5.000000000000000</double>
     </property>
    </widget>
-   <widget class="QLabel" name="label_6">
+   <widget class="QLabel" name="label_temp">
     <property name="geometry">
      <rect>
       <x>310</x>
@@ -183,7 +183,7 @@
      <enum>QLCDNumber::Flat</enum>
     </property>
    </widget>
-   <widget class="QLabel" name="label_7">
+   <widget class="QLabel" name="label_r">
     <property name="geometry">
      <rect>
       <x>570</x>
@@ -196,7 +196,7 @@
      <string>R</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_8">
+   <widget class="QLabel" name="label_g">
     <property name="geometry">
      <rect>
       <x>650</x>
@@ -209,7 +209,7 @@
      <string>G</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_9">
+   <widget class="QLabel" name="label_b">
     <property name="geometry">
      <rect>
       <x>730</x>
@@ -260,7 +260,7 @@
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QLabel" name="label_20">
+   <widget class="QLabel" name="label_sensor_megalka1">
     <property name="geometry">
      <rect>
       <x>390</x>
@@ -279,7 +279,7 @@
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QLabel" name="label_24">
+   <widget class="QLabel" name="label_sensor_print1">
     <property name="enabled">
      <bool>true</bool>
     </property>
@@ -301,7 +301,7 @@
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_2">
+   <widget class="QPushButton" name="pushButton_sensor1">
     <property name="geometry">
      <rect>
       <x>390</x>
@@ -314,7 +314,7 @@
      <string>Вкл</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_3">
+   <widget class="QPushButton" name="pushButton_sensor2">
     <property name="geometry">
      <rect>
       <x>480</x>
@@ -327,7 +327,7 @@
      <string>Вкл</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_26">
+   <widget class="QLabel" name="label_sensor_megalka2">
     <property name="geometry">
      <rect>
       <x>480</x>
@@ -346,7 +346,7 @@
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QLabel" name="label_27">
+   <widget class="QLabel" name="label_sensor_print2">
     <property name="geometry">
      <rect>
       <x>480</x>
@@ -365,7 +365,7 @@
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_4">
+   <widget class="QPushButton" name="pushButton_sensor3">
     <property name="geometry">
      <rect>
       <x>570</x>
@@ -378,7 +378,7 @@
      <string>Вкл</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_29">
+   <widget class="QLabel" name="label_sensor_megalka3">
     <property name="geometry">
      <rect>
       <x>570</x>
@@ -397,7 +397,7 @@
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QLabel" name="label_31">
+   <widget class="QLabel" name="label_sensor_print3">
     <property name="geometry">
      <rect>
       <x>570</x>
@@ -492,7 +492,7 @@
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QLabel" name="label_13">
+   <widget class="QLabel" name="label_pressure">
     <property name="geometry">
      <rect>
       <x>310</x>
@@ -544,7 +544,7 @@
      <double>5.000000000000000</double>
     </property>
    </widget>
-   <widget class="QLabel" name="label_14">
+   <widget class="QLabel" name="label_illumination">
     <property name="geometry">
      <rect>
       <x>310</x>
@@ -580,7 +580,7 @@
      <double>5.000000000000000</double>
     </property>
    </widget>
-   <widget class="QLabel" name="label_15">
+   <widget class="QLabel" name="label_illumination2">
     <property name="geometry">
      <rect>
       <x>310</x>
@@ -600,7 +600,7 @@
      <string>Освещенность</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_34">
+   <widget class="QLabel" name="label_accelorometer">
     <property name="geometry">
      <rect>
       <x>310</x>
@@ -896,7 +896,7 @@
      <enum>QLCDNumber::Flat</enum>
     </property>
    </widget>
-   <widget class="QLabel" name="label_16">
+   <widget class="QLabel" name="label_rgb_illumination">
     <property name="geometry">
      <rect>
       <x>310</x>
@@ -916,7 +916,7 @@
      <string>Освещенность</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_10">
+   <widget class="QLabel" name="label_x">
     <property name="geometry">
      <rect>
       <x>570</x>
@@ -929,7 +929,7 @@
      <string>Х</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_11">
+   <widget class="QLabel" name="label_y">
     <property name="geometry">
      <rect>
       <x>650</x>
@@ -942,7 +942,7 @@
      <string>Y</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_12">
+   <widget class="QLabel" name="label_z">
     <property name="geometry">
      <rect>
       <x>730</x>
@@ -955,11 +955,11 @@
      <string>Z</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_4">
+   <widget class="QLabel" name="lubel_tumblers">
     <property name="geometry">
      <rect>
       <x>900</x>
-      <y>60</y>
+      <y>70</y>
       <width>81</width>
       <height>20</height>
      </rect>
@@ -986,7 +986,7 @@
      </rect>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_5">
+   <widget class="QPushButton" name="pushButton_send_get">
     <property name="geometry">
      <rect>
       <x>1050</x>
@@ -1002,9 +1002,9 @@
    <widget class="QLineEdit" name="lineEdit_2">
     <property name="geometry">
      <rect>
-      <x>790</x>
-      <y>40</y>
-      <width>241</width>
+      <x>690</x>
+      <y>50</y>
+      <width>341</width>
       <height>21</height>
      </rect>
     </property>
@@ -1016,7 +1016,7 @@
      <x>0</x>
      <y>0</y>
      <width>1185</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>
