@@ -1,299 +1,282 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
+import typing
+from PyQt5 import QtCore, QtGui, QtWidgets #импорт нужный библиотек
 from PyQt5 import uic
 from PyQt5.QtGui import QColor, QPalette
 from PyQt5.QtGui import QPixmap
-from PyQt5.QtCore import QTimer
+from PyQt5.QtCore import QTimer, QJsonDocument, QUrl
 from PyQt5.QtWidgets import *
-from PyQt5.QtNetwork import QNetworkAccessManager, QNetworkRequest
+from PyQt5.QtNetwork import QNetworkAccessManager, QNetworkRequest, QNetworkReply
 
-import requests
 import time
 import json
+import sys
+import os
+
+from plot import Plot
 import Res_rc
-import copy
-import pyqtgraph as pg
-#import matplotlib.pyplot as plt
-#import sys
 
-colors = {} #переменная для работы с цветом, позже нам понадобится
-last_clicked_label = None
-plotLen = 20
-valArr = [20] * plotLen
-plot = None
 
-def led1 (checked): #отвечает за включение первого светодиода
-    if checked:
-        form.pushButton_2.setText("Выкл")
-        print("I'm worked too much")
-        form.label_24.hide()
-        form.label_20.show()          
-    else:
-        form.label_20.hide()
-        form.label_24.show()
-        form.pushButton_2.setText("Вкл")
-        print ("I'm worked too")
 
-def led2 (checked): #отвечает за включение второго светодиода
-    if checked:
-        form.pushButton_3.setText("Выкл")
-        print("I'm worked too much")
-        form.label_27.hide()
-        form.label_26.show()       
-    else:
-        form.label_26.hide()
-        form.label_27.show()
-        form.pushButton_3.setText("Вкл")
-        print ("I'm worked too")
+def read_conf() -> dict:
 
-def led3 (checked): #отвечает за включение третьего светодиода
-    if checked:
-        form.pushButton_4.setText("Выкл")
-        print("I'm worked too much")
-        form.label_31.hide()
-        form.label_29.show()
-        #state =  form.label_24.isVisible() 
-                  
-    else:
-        form.label_29.hide()
-        form.label_31.show()
-        form.pushButton_4.setText("Вкл")
-        print ("I'm worked too")
+    """
+    Utility for reading, modifying and logging config
 
+    открывает файл 'config.json', загружает его содержимое в переменную 'conf' в формате словаря (dictionary) при помощи функции 'json.load()', а затем выводит все ключи словаря 'conf' при помощи цикла 'for'.
+    """
+
+    # Opening JSON file
+    f = open('config.json')
+    conf = json.load(f)
+    f.close()
+
+    # Overwrite config if want to
+    # ... # TODO: ничего делать не нужно, просто оставьте этот комментарий в конечном файле (или преведите на русский)
+
+    # Config logging
+    print("Found arguments:")
+    for i in conf:
+        print(i)
+
+    return conf
+
+
+
+class AppWindow(QMainWindow):
+    
+    """
+    Main application window class    
+    """
+    
+    def __init__(self, conf: dict):
+        super(AppWindow, self).__init__()
+
+        # Parse .ui file and init window UI with it
+        self.ui = uic.loadUi(os.path.join(conf['uiPath'], conf['uiFileName']), self)
+
+        # Setup network management
+        self.nam = QNetworkAccessManager()
+
+        # Init plotter
+        self.plot = Plot(self.ui.plotwidget)
+
+        # Set window title
+        self.setWindowTitle("Lr4")
+
+        # Load RGB leds default values
+        self.rgb_leds_state = conf["defaultRGBLeds"]
+
+        # TODO: установить цвета RGB светодиодов по умолчанию
+
+        # Init request url editors
+        self.ui.lineEdit.setText("http://" + conf['defaultMDNSname'] + conf['defaultPostRoute'])
+        self.ui.lineEdit_2.setText("http://" + conf['defaultMDNSname'] + conf['defaultGetRoute'])
+
+        # Init LED controls
+        for i in range(1, 4):
+            getattr(self.ui, f"pushButton_sensor{i}").setCheckable(True) # вкл режим перекл
+            getattr(self.ui, f"pushButton_sensor{i}").setChecked(False) # нач значение
+            getattr(self.ui, f"label_sensor_megalka{i}").hide()
+            getattr(self.ui, f"pushButton_sensor{i}").toggled["bool"].connect(lambda val: self.handle_toggle_lamp(f"LED{i}", val))
+
+        # TODO: Инициализировать остальные элементы из conf
+
+        # Init request manual triggers
+        self.ui.pushButton_send_post.clicked.connect(self.send_message) # привязываем функцию к кнопке Отправить
+        self.ui.pushButton_send_get.clicked.connect(self.get_value_from_macket) # привязываем функцию к кнопке Отправить GET запрос
+
+        # TODO: добавить обработчики для смены цвета 8 светодиодов и ещё, чего не хватает (см. папку на gdrive и интерфейс приложения)
+
+
+    def handle_toggle_lamp(self, Name: str, checked: bool):
+
+        """
+        Переключение одноцветных лампочек
+        """
+
+        n = Name[-1]
         
-def updateLCD(): #обновление дисплея
-    global temp  #переменная для работы с дисплеем
-    form.lcdNumber.display(temp) 
+        # TODO: переписать названия пушей и лейблов
+        if checked: 
+            getattr(self.ui, 'pushButton_' + n).setText("Выкл")
+            getattr(self.ui, 'label_' + n + '4').hide() 
+            getattr(self.ui, 'label_' + n + '0').show() 
 
-def sed (): #проверка работы элемента
-    print ("I'm worked!")
-  
-led_data = { #список начальных параметров у светодиода 
-    "leds1": {"red": 0, "green": 0, "blue": 0},
-    "leds2": {"red": 0, "green": 0, "blue": 0},
-    "leds3": {"red": 0, "green": 0, "blue": 0},
-    "leds4": {"red": 0, "green": 0, "blue": 0},
-    "leds5": {"red": 0, "green": 0, "blue": 0},
-    "leds6": {"red": 0, "green": 0, "blue": 0},
-    "leds7": {"red": 0, "green": 0, "blue": 0},
-    "leds8": {"red": 0, "green": 0, "blue": 0},
-}
+            print("I'm worked too much") # TODO: нужно что-то более осмысленное
+        else:
+            getattr(self.ui, 'label_' + n + '0').hide()
+            getattr(self.ui, 'label_' + n + '4').show()
+            getattr(self.ui, 'pushButton_' + n).setText("Вкл")
 
-def vkl():
-     for led in form.leds:
-            #осторожно! Одинаковые названия у объектов Led и JSON.
-            led.setStyleSheet(f"background-color: yellow;")
-            led_data[led.objectName()]["red"] = 255
-            led_data[led.objectName()]["green"] = 255
-            led_data[led.objectName()]["blue"] = 0
-
-def vikl():
-        for led in form.leds:
-             #осторожно! Одинаковые названия у объектов Led и JSON.
-            led.setStyleSheet(f"background-color: black;")
-            led_data[led.objectName()]["red"] = 0
-            led_data[led.objectName()]["green"] = 0
-            led_data[led.objectName()]["blue"] = 0
-
-def color():
-        color = QColorDialog.getColor() #получение цвета от диалога
-        if color.isValid(): #проверка наличия цвета и применение его над изображением программы
-            palette = QPalette()
-            palette.setColor(QPalette.Button, color)
-            form.color_b.setPalette(palette)
-            for led in form.leds:
-                led.setStyleSheet(f"background-color: {color.name()};")
-                led_data[led.objectName()]["red"] = color.red()
-                led_data[led.objectName()]["green"] = color.green()
-                led_data[led.objectName()]["blue"] = color.blue()
-
-def led_clicked(event):
-       colors = led.palette().color(QPalette.Background)
-       sender= QApplication.widgetAt(event.globalPos()) #QApplication.widgetAt() для получения текущего виджета, на котором было совершено действие
-       color = QColorDialog.getColor()
-       if color.isValid():
-               #caution! Naming will be the same for a Led and JSON led objects
-              sender.setStyleSheet(f"background-color: {color.name()};")
-              led_data[sender.objectName()]["red"] = color.red()
-              led_data[sender.objectName()]["green"] = color.green()
-              led_data[sender.objectName()]["blue"] = color.blue()
-       else:
-             form.leds.setStyleSheet(" ")
-    
-def sendMessage():
-    url = form.lineEdit.text()
-    labels_dict = {}
-    labels_dict["LED1"] = form.label_20.isVisible()
-    labels_dict["LED2"] = form.label_26.isVisible()
-    labels_dict["LED3"] = form.label_29.isVisible()
-
-    json_data = {}
-    json_data.update(led_data)
-    json_data.update(labels_dict)
-    json_str = json.dumps(json_data, separators=(',', ':'))
-    
-    data_str = 'Я отправляю текст на: ' + url + '\n'+ json_str
-    form.textEdit.setPlainText(data_str)
-    
-    headers = {'Content-type': 'application/json', 'Accept': 'text/plain'} #заголовки запроса
-    response = requests.post(url, json=json_data, headers=headers) #отправка POST запроса
-
-    # обрабатываем ответ и выводим его в поле вывода
-    if response.status_code == 200:
-        form.textEdit.append('О, все прошло успешно!\n') #выводим значение в line_edit
-    else:
-        form.textEdit.append('Ошибка при получении данных')
+            print ("I'm worked too")    # TODO: нужно что-то более осмысленное
 
 
+    def collect_lamps_state(self) -> dict:
+        lamps_state = {}
 
-def getValueFromMacket():
-    url = form.lineEdit_2.text()
-    response = requests.get(url) #отправка POST запроса
+        for i in range(1,4):
+            lamps_state[f"LED{i}"] = getattr(self.ui, f"label_sensor_megalka{i}").isVisible()
 
-    # обрабатываем ответ и выводим его в поле вывода
-    if response.status_code == 200:
-        data=response.json() #функция преобразования данных в объект питон
-        #Parse the date
-        form.textEdit.append(json.dumps(data)) #выводим значение в line_edit
-        form.textEdit.append(str(data["temperature"]))
+        return lamps_state
+
+
+    def compose_post_json_data(self) -> dict:
+        json_data = {}
+
+        json_data.update(self.rgb_leds_state)
+        json_data.update(self.collect_lamps_state())
+
+        # TODO: добавить отправку остальных данных (см. grdive и поля, которые парсит приложение из stand_code/mDNS_ESP8266.ino)
         
-        bs = list()
+        return json_data
+
+
+    def log_post_request(self, url, json_data):
+        json_str = json.dumps(json_data, separators=(',', ':'))
+
+        data_str = 'Я отправляю текст на: ' + url + '\n'+ json_str
+
+        self.ui.textEdit.setPlainText(data_str)
+    
+
+    def send_message(self):
+
+        """
+        POST запрос
+        """
+
+        # Get inputed url
+        url = self.ui.lineEdit.text()  
+
+        # compose body
+        json_data = self.compose_post_json_data()
+        self.log_post_request(url, json_data)
+
+        data = QJsonDocument(json_data)
+
+        # Create request object
+        request = QNetworkRequest(QUrl(url))
+
+        # Set request headers
+        request.setHeader(QNetworkRequest.ContentTypeHeader, 'application/json')
+        request.setRawHeader(b'Accept', b'text/plain')
+
+        # Do POST request and store its reply object
+        self.post_reply = self.nam.post(request, data.toJson())
+
+        # Set callback for request finishing signal
+        self.post_reply.finished.connect(self.handle_post_reply)
+
+
+    def get_value_from_macket(self):   ###переименовать элементы, которые находятся в for'aх 
+        
+        """
+        GET запрос
+        """
+        
+        url = self.ui.lineEdit_2.text()
+
+        request = QNetworkRequest(QUrl(url))
+
+        self.get_reply = self.nam.get(request)
+
+        # Set callback for request finishing signal
+        self.get_reply.finished.connect(self.handle_get_reply)
+
+
+    # TODO: если кто хочет поупражняться в понимании, что здесь происходит, напишите аннотацию для всех аргументов функции, используя typing.Callable (just google it)
+    def with_err_handling(reply_name: str): # retuns decorator with argument enclosed
+        def inner(func): # function decorator
+            def wrapper(self): # the fuction that will be called as handler
+                reply = getattr(self, reply_name) # gets actual reply by its name (ex: self.get_reply)
+                
+                err = reply.error()
+
+                if err == QNetworkReply.NetworkError.NoError:
+                    self.ui.textEdit.append('О, все прошло успешно!')
+                    func(self) # calling actual handler
+                else:
+                    status_code = reply.attribute(QNetworkRequest.Attribute.HttpStatusCodeAttribute)
+                    self.ui.textEdit.append(f'Ошибка при получении данных: {status_code}')
+
+            return wrapper
+
+        return inner
+
+
+    @with_err_handling('post_reply')
+    def handle_post_reply(self):
+        res = self.post_reply.readAll().data()
+
+        self.ui.textEdit.append(res.decode())
+
+
+    @with_err_handling('get_reply')
+    def handle_get_reply(self):
+        res = self.get_reply.readAll().data()
+
+        data = json.loads(res) #функция преобразования данных в объект питон
+        
+        self.ui.textEdit.append(json.dumps(data, separators=(',', ':'))) #выводим значение в line_edit
+
+        self.ui.textEdit.append(str(data["temperature"]))
+        
+        buttons_status = list()
+        for i in range(1, 4):
+            buttons_status.append(data[f"button{i}State"])
+        """"
         bs.append(data["button1State"])
         bs.append(data["button2State"])
         bs.append(data["button3State"])
-        update_button(bs)
+        """
+        self.update_buttons(buttons_status)
 
-        update_pressure(data["pressure"])
+        self.update_pressure(data["pressure"])
         
-        form.lcdNumber_7.display(data["ambient_light"])
-        form.lcdNumber_2.display (data["red_light"])
-        form.lcdNumber_3.display (data["green_light"])
-        form.lcdNumber_4.display (data["blue_light"])
-        form.lcdNumber_8.display (data["lightness"])
-        
-        form.lcdNumber_5.display(data['acceleration_x'])
-        form.lcdNumber_9.display (data['acceleration_y'])
-        form.lcdNumber_6.display (data['acceleration_z'])
+        color_l=("ambient_light", "red_light", "green_light", "blue_light", "lightness","acceleration_x", "acceleration_y", "acceleration_z" )
 
-        led1(data['LED1'])
-        led2(data['LED2'])
-        led3(data['LED3'])
-        valArr.pop(0)
-        valArr.append(data["temperature"])
-        print(valArr)
-        UpdatePlot(plot, valArr)
-    else:
-        form.textEdit.append('Ошибка при получении данных')
+        # TODO: переименовать lcdNumber_N в lcdNumber_....._light
+        for s in color_l:
+            getattr(self.ui, "lcdNumber_" + s).display(data[s])
+        """
+        self.ui.lcdNumber_7.display(data["ambient_light"])
+        self.ui.lcdNumber_2.display (data["red_light"])
+        self.ui.lcdNumber_3.display (data["green_light"])
+        self.ui.lcdNumber_4.display (data["blue_light"])
+        self.ui.lcdNumber_8.display (data["lightness"])
+        self.ui.lcdNumber_5.display(data["acceleration_x"])
+        self.ui.lcdNumber_9.display (data["acceleration_y"])
+        self.ui.lcdNumber_6.display (data["acceleration_z"])
+        """
 
+        for i in range(1,4):
+            self.handle_toggle_lamp[f"LED{i}", data[f"LED{i}"]]
 
-#json.load(file) @ACHT! Method to convert Str to JSON
+        self.plot.update(data["temperature"])
 
 
-def update_pressure(p):
-    form.lcd_pressure.display(p)
-
-def update_button (bs):
-    for i in range(1, 4):
-         button_state = bs[i-1]
-         if button_state == 'True':
-             getattr(form, f'on_{i}').show()
-             getattr(form, f'off_{i}').hide()
-         else:
-             getattr(form, f'on_{i}').hide()
-             getattr(form, f'off_{i}').show()
+    def update_buttons(self, bs):
+        for i in range(1, 4):
+            button_state = bs[i-1]
+            if button_state == 'True':
+                getattr(self.ui, f'on_{i}').show()
+                getattr(self.ui, f'off_{i}').hide()
+            else:
+                getattr(self.ui, f'on_{i}').hide()
+                getattr(self.ui, f'off_{i}').show()
 
 
-def UpdatePlot(plot, val):
-    x = list(range(1, len(valArr)+1))
-    bargraph = pg.BarGraphItem(x = x, height = val, width = 0.6, brush ='g')
-    plot.clear()
-    plot.addItem(bargraph)
-    
-def Plots(form, valArr):
-    widget = QWidget()
-    plot = pg.plot() #создает объект PlotWidget из библиотеки PyqtGraph
-    
-    x = list(range(1, len(valArr)+1))
-    bargraph = pg.BarGraphItem(x = x, height = valArr, width = 0.6, brush ='g')
-    plot.addItem(bargraph)
-    
-    # Creating a grid layout
-    layout = QGridLayout()
-    layout.addWidget(plot, 0,0)
-    form.plotwidget.setLayout(layout)
+    def update_pressure(self, p):
+        self.ui.lcd_pressure.display(p)
 
-    return plot
-    
+
 
 if __name__ == "__main__":
-    # Opening JSON file
-    f = open('config.json') #открывает файл 'config.json', загружает его содержимое в переменную 'conf' в формате словаря (dictionary) при помощи функции 'json.load()', а затем выводит все ключи словаря 'conf' при помощи цикла 'for'.
-    conf = json.load(open('config.json'))
-    f.close()
+    app = QApplication(sys.argv)
 
-    print("Find an arguments:")
-    for i in conf:
-        print(i)
-        
-    import sys
-
-    Form, Window = uic.loadUiType(conf['uiPath'] + conf['uiFileName'])
-
-    app = QApplication(sys.argv)# Создаем экземпляр QApplication и передаем параметры командной строки 
-    window = Window()
-    form = Form()
-    form.setupUi(window)
-    window.show() # Окна скрыты по умолчанию!
-    window.setWindowTitle('Lr4')  #nazvanie
-    form.pushButton.clicked.connect(sendMessage) #привязываем функцию к кнопке Отправить
-    form.lineEdit.setText("http://" + conf['defaultMDNSname'] + conf['defaultPostRoute'])
-    form.lineEdit_2.setText("http://" + conf['defaultMDNSname'] + conf['defaultGetRoute'])
-    form.pushButton_5.clicked.connect(getValueFromMacket) #привязываем функцию к кнопке Отправить GET запрос
+    conf = read_conf()
     
+    win = AppWindow(conf)
+    win.show()
 
-    form.pushButton_2.setCheckable(True) #вкл режим перекл
-    form.pushButton_2.setChecked(False) #нач значение
-    form.label_20.hide()
-    form.pushButton_2.toggled["bool"].connect(led1)
-
-    form.pushButton_3.setCheckable(True) #вкл режим перекл
-    form.pushButton_3.setChecked(False) #нач значение
-    form.label_26.hide()
-    form.pushButton_3.toggled["bool"].connect(led2)
-
-    form.pushButton_4.setCheckable(True) #вкл режим перекл
-    form.pushButton_4.setChecked(False) #нач значение
-    form.label_29.hide()
-    form.pushButton_4.toggled["bool"].connect(led3)
-    
-    form.on_1.hide()
-    form.on_2.hide()
-    form.on_3.hide()
-
-    form.lcdNumber.display(45)
-
-    
-    form.leds = [form.leds1, form.leds2, form.leds3, form.leds4, form.leds5, form.leds6, form.leds7, form.leds8]
-
-
-    for led in form.leds:
-            led.mousePressEvent = led_clicked
-        
-    timer = QTimer()
-    timer.setInterval(1000)
-
-    #Connect the timer to the update_pressure function
-    #TODO connect to getSensValue from macket
-    #timer.timeout.connect(update_pressure)
-    #timer.timeout.connect (update_button)
-    #timer.timeout.connect (update_light)
-    #timer.timeout.connect (update_acceleration)
-
-    timer.start()
-
-    form.vkl_b.clicked.connect(vkl)
-    form.vikl_b.clicked.connect(vikl)
-    form.color_b.clicked.connect(color)
-    
-    plot = Plots(form, valArr)
-    
-    sys.exit (app.exec_()) # Запуск цикла событий
+    sys.exit(app.exec())

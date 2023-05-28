@@ -1,7 +1,7 @@
 {
   "uiFileName": "PyQt_app.ui",
-  "uiPath": "ui/",
-  "defaultMDNSname": "esp8266",
+  "uiPath": "./",
+  "defaultMDNSname": "localhost:3001",
   "defaultPostRoute": "/postvalue", 
   "defaultGetRoute": "/sensval",
   "pressure": "355",
@@ -16,5 +16,15 @@
   "lightness": "0",
   "acceleration_x": "12",
   "acceleration_y": "23",
-  "acceleration_z": "11"
+  "acceleration_z": "11",
+  "defaultRGBLeds": {
+    "leds1": {"red": 0, "green": 0, "blue": 0},
+    "leds2": {"red": 0, "green": 0, "blue": 0},
+    "leds3": {"red": 0, "green": 0, "blue": 0},
+    "leds4": {"red": 0, "green": 0, "blue": 0},
+    "leds5": {"red": 0, "green": 0, "blue": 0},
+    "leds6": {"red": 0, "green": 0, "blue": 0},
+    "leds7": {"red": 0, "green": 0, "blue": 0},
+    "leds8": {"red": 0, "green": 0, "blue": 0}
+  }
 }
