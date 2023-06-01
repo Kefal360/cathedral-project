@@ -14,17 +14,36 @@ label_10 = label_x
 label_11 = label_y
 label_12 = label_z
 
-label_24 = label_sensor_print1
-label_27 = label_sensor_print2
-label_31 = label_sensor_print3
-label_20 = label_sensor_megalka1
-label_26 = label_sensor_megalka2
-label_29 = label_sensor_megalka3
+label_24 = label_lamp1_off (промежуточное название -- label_sensor_print1)
+label_27 = label_lamp2_off
+label_31 = label_lamp3_off
+
+label_20 = label_lamp1_on (промежуточное название -- label_sensor_megalka1)
+label_26 = label_lamp2_on
+label_29 = label_lamp3_on 
 
 pushButton = pushButton_send_post
-pushButton_5 = pushButton_send_get
-pushButton_2 = pushButton_sensor1
-pushButton_3 = pushButton_sensor2
-pushButton_4 = pushButton_sensor3
+pushButton_5 = pushButton_send_get_request
+pushButton_2 = pushButton_turn_on_lamp1(промежуточное название -- pushButton_sensor1) 
+pushButton_3 = pushButton_turn_on_lamp2(промежуточное название -- pushButton_sensor2)
+pushButton_4 = pushButton_turn_on_lamp3(промежуточное название -- pushButton_sensor3)
+
+lcdNumber = lcd_temp
+lcdNumber_7 = lcd_illumination
+lcdNumber_8 = lcd_illumination2
+lcdNumber_2 = lcd_rgb_r
+lcdNumber_3= lcd_rgb_g
+lcdNumber_4 = lcd_rgb_b
+lcdNumber_5 = lcd_xyz_x
+lcdNumber_9 = lcd_xyz_y
+lcdNumber_6 = lcd_xyz_z
+
+vikl_b = pushButton_leds_off
+vkl_b = pushButton_leds_on
+color_b = pushButton_leds_color
+
+lineEdit = lineEdit_URL
+lineEdit_2 = lineEdit_request
+textEdit = textEdit_message
 
 
