@@ -301,7 +301,7 @@
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_turn_on_lamp1">
+   <widget class="QPushButton" name="pushButton_switch_lamp1">
     <property name="geometry">
      <rect>
       <x>390</x>
@@ -314,7 +314,7 @@
      <string>Вкл</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_turn_on_lamp2">
+   <widget class="QPushButton" name="pushButton_switch_lamp2">
     <property name="geometry">
      <rect>
       <x>480</x>
@@ -365,7 +365,7 @@
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_turn_on_lamp3">
+   <widget class="QPushButton" name="pushButton_switch_lamp3">
     <property name="geometry">
      <rect>
       <x>570</x>
@@ -976,7 +976,7 @@
      <string>Тумблеры</string>
     </property>
    </widget>
-   <widget class="QTextEdit" name="textEdit">
+   <widget class="QTextEdit" name="textEdit_message">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -986,7 +986,7 @@
      </rect>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_send_get_request">
+   <widget class="QPushButton" name="pushButton_send_get">
     <property name="geometry">
      <rect>
       <x>1050</x>

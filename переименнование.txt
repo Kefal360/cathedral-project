@@ -14,19 +14,19 @@ label_10 = label_x
 label_11 = label_y
 label_12 = label_z
 
-label_24 = label_lamp1_off (промежуточное название -- label_sensor_print1)
+label_24 = label_lamp1_off 
 label_27 = label_lamp2_off
 label_31 = label_lamp3_off
 
-label_20 = label_lamp1_on (промежуточное название -- label_sensor_megalka1)
+label_20 = label_lamp1_on 
 label_26 = label_lamp2_on
 label_29 = label_lamp3_on 
 
 pushButton = pushButton_send_post
-pushButton_5 = pushButton_send_get_request
-pushButton_2 = pushButton_turn_on_lamp1(промежуточное название -- pushButton_sensor1) 
-pushButton_3 = pushButton_turn_on_lamp2(промежуточное название -- pushButton_sensor2)
-pushButton_4 = pushButton_turn_on_lamp3(промежуточное название -- pushButton_sensor3)
+pushButton_5 = pushButton_send_get
+pushButton_2 = pushButton_switch_lamp1
+pushButton_3 = pushButton_switch_lamp2
+pushButton_4 = pushButton_switch_lamp3
 
 lcdNumber = lcd_temp
 lcdNumber_7 = lcd_illumination
