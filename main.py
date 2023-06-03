@@ -69,15 +69,15 @@ class AppWindow(QMainWindow):
         # TODO: установить цвета RGB светодиодов по умолчанию
 
         # Init request url editors
-        self.ui.lineEdit.setText("http://" + conf['defaultMDNSname'] + conf['defaultPostRoute'])
-        self.ui.lineEdit_2.setText("http://" + conf['defaultMDNSname'] + conf['defaultGetRoute'])
+        self.ui.lineEdit_URL.setText("http://" + conf['defaultMDNSname'] + conf['defaultPostRoute'])
+        self.ui.lineEdit_request.setText("http://" + conf['defaultMDNSname'] + conf['defaultGetRoute'])
 
         # Init LED controls
         for i in range(1, 4):
-            getattr(self.ui, f"pushButton_sensor{i}").setCheckable(True) # вкл режим перекл
-            getattr(self.ui, f"pushButton_sensor{i}").setChecked(False) # нач значение
-            getattr(self.ui, f"label_sensor_megalka{i}").hide()
-            getattr(self.ui, f"pushButton_sensor{i}").toggled["bool"].connect(lambda val: self.handle_toggle_lamp(f"LED{i}", val))
+            getattr(self.ui, f"pushButton_switch_lamp{i}").setCheckable(True) # вкл режим перекл
+            getattr(self.ui, f"pushButton_switch_lamp{i}").setChecked(False) # нач значение
+            getattr(self.ui, f"label_lamp_on{i}").hide()
+            getattr(self.ui, f"pushButton_switch_lamp{i}").toggled["bool"].connect(lambda val: self.handle_toggle_lamp(f"LED{i}", val))
 
         # TODO: Инициализировать остальные элементы из conf
 
@@ -115,7 +115,7 @@ class AppWindow(QMainWindow):
         lamps_state = {}
 
         for i in range(1,4):
-            lamps_state[f"LED{i}"] = getattr(self.ui, f"label_sensor_megalka{i}").isVisible()
+            lamps_state[f"LED{i}"] = getattr(self.ui, f"label_lamp_on{i}").isVisible()
 
         return lamps_state
 
@@ -136,7 +136,7 @@ class AppWindow(QMainWindow):
 
         data_str = 'Я отправляю текст на: ' + url + '\n'+ json_str
 
-        self.ui.textEdit.setPlainText(data_str)
+        self.ui.textEdit_message.setPlainText(data_str)
     
 
     def send_message(self):
@@ -146,7 +146,7 @@ class AppWindow(QMainWindow):
         """
 
         # Get inputed url
-        url = self.ui.lineEdit.text()  
+        url = self.ui.lineEdit_URL.text()  
 
         # compose body
         json_data = self.compose_post_json_data()
@@ -174,7 +174,7 @@ class AppWindow(QMainWindow):
         GET запрос
         """
         
-        url = self.ui.lineEdit_2.text()
+        url = self.ui.lineEdit_request.text()
 
         request = QNetworkRequest(QUrl(url))
 
@@ -193,11 +193,11 @@ class AppWindow(QMainWindow):
                 err = reply.error()
 
                 if err == QNetworkReply.NetworkError.NoError:
-                    self.ui.textEdit.append('О, все прошло успешно!')
+                    self.ui.textEdit_message.append('О, все прошло успешно!')
                     func(self) # calling actual handler
                 else:
                     status_code = reply.attribute(QNetworkRequest.Attribute.HttpStatusCodeAttribute)
-                    self.ui.textEdit.append(f'Ошибка при получении данных: {status_code}')
+                    self.ui.textEdit_message.append(f'Ошибка при получении данных: {status_code}')
 
             return wrapper
 
@@ -208,7 +208,7 @@ class AppWindow(QMainWindow):
     def handle_post_reply(self):
         res = self.post_reply.readAll().data()
 
-        self.ui.textEdit.append(res.decode())
+        self.ui.textEdit_message.append(res.decode())
 
 
     @with_err_handling('get_reply')
@@ -217,9 +217,9 @@ class AppWindow(QMainWindow):
 
         data = json.loads(res) #функция преобразования данных в объект питон
         
-        self.ui.textEdit.append(json.dumps(data, separators=(',', ':'))) #выводим значение в line_edit
+        self.ui.textEdit_message.append(json.dumps(data, separators=(',', ':'))) #выводим значение в line_edit
 
-        self.ui.textEdit.append(str(data["temperature"]))
+        self.ui.textEdit_message.append(str(data["temperature"]))
         
         buttons_status = list()
         for i in range(1, 4):
