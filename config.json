@@ -27,5 +27,5 @@
     "leds7": {"red": 0, "green": 0, "blue": 0},
     "leds8": {"red": 0, "green": 0, "blue": 0}
   },
-  "defaultUpdateInterval": 2000
+  "defaultUpdateInterval": 5000
 }

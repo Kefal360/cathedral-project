@@ -2,7 +2,7 @@ import typing
 from PyQt5 import QtCore, QtGui, QtWidgets #импорт нужный библиотек
 from PyQt5 import uic
 from PyQt5.QtGui import QColor, QPalette
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtGui import QPixmap, QMouseEvent
 from PyQt5.QtCore import QTimer, QJsonDocument, QUrl, QTime
 from PyQt5.QtWidgets import *
 from PyQt5.QtNetwork import QNetworkAccessManager, QNetworkRequest, QNetworkReply
@@ -15,35 +15,21 @@ import os
 from plot import Plot
 import Res_rc
 
-
-default_led_data = { #список из словарей с начальными параметрами у светодиодов, надо сделать его атрибутом главного класса 
-    "leds1": {"red": 0, "green": 0, "blue": 0},
-    "leds2": {"red": 0, "green": 0, "blue": 0},
-    "leds3": {"red": 0, "green": 0, "blue": 0},
-    "leds4": {"red": 0, "green": 0, "blue": 0},
-    "leds5": {"red": 0, "green": 0, "blue": 0},
-    "leds6": {"red": 0, "green": 0, "blue": 0},
-    "leds7": {"red": 0, "green": 0, "blue": 0},
-    "leds8": {"red": 0, "green": 0, "blue": 0},
-}
-
-RGB=['red', 'green',"blue"]
+RGB = ['red', 'green',"blue"]
 
 def read_conf() -> dict:
-
     """
     Utility for reading, modifying and logging config
 
-    открывает файл 'config.json', загружает его содержимое в переменную 'conf' в формате словаря (dictionary) при помощи функции 'json.load()', а затем выводит все ключи словаря 'conf' при помощи цикла 'for'.
+    открывает файл 'config.json',
+    загружает его содержимое в переменную 'conf' в формате словаря (dictionary) при помощи функции 'json.load()',
+    а затем выводит все ключи словаря 'conf' при помощи цикла 'for'.
     """
 
     # Opening JSON file
     f = open('config.json')
     conf = json.load(f)
     f.close()
-
-    # Overwrite config if want to
-    # ... # TODO: ничего делать не нужно, просто оставьте этот комментарий в конечном файле (или преведите на русский)
 
     # Config logging
     print("Found arguments:")
@@ -55,7 +41,6 @@ def read_conf() -> dict:
 
 
 class AppWindow(QMainWindow):
-    
     """
     Main application window class    
     """
@@ -75,11 +60,6 @@ class AppWindow(QMainWindow):
         # Set window title
         self.setWindowTitle("Lr4")
 
-        # Load RGB leds default values
-        self.rgb_leds_state = conf["defaultRGBLeds"]
-
-        # TODO: установить цвета RGB светодиодов по умолчанию
-
         # Init request url editors
         self.ui.lineEdit_URL.setText("http://" + conf['defaultMDNSname'] + conf['defaultPostRoute'])
         self.ui.lineEdit_request.setText("http://" + conf['defaultMDNSname'] + conf['defaultGetRoute'])
@@ -89,50 +69,153 @@ class AppWindow(QMainWindow):
             getattr(self.ui, f"pushButton_switch_lamp{i}").setCheckable(True) # вкл режим перекл
             getattr(self.ui, f"pushButton_switch_lamp{i}").setChecked(False) # нач значение
             getattr(self.ui, f"label_lamp_on{i}").hide()
-            getattr(self.ui, f"pushButton_switch_lamp{i}").toggled["bool"].connect(lambda val: self.handle_toggle_lamp(f"LED{i}", val))
+            getattr(self.ui, f"pushButton_switch_lamp{i}").toggled["bool"].connect(lambda val, i=i: self.handle_toggle_lamp(i, val))
 
-        # TODO: Инициализировать остальные элементы из conf
-
-        # Init request manual triggers
+        # Setup request manual triggers
         self.ui.pushButton_send_post.clicked.connect(self.send_message) # привязываем функцию к кнопке Отправить
         self.ui.pushButton_send_get.clicked.connect(self.get_value_from_macket) # привязываем функцию к кнопке Отправить GET запрос
 
+        # For convinience store RGB LED strip in list 
         self.ui.led_array = [getattr(self.ui, f"leds{i}") for i in range(1,9)]
-        self.led_data=default_led_data
 
+        # Store RGB LEDs default values
+        self.rgb_leds_state = conf["defaultRGBLeds"]
+
+        # Init RGB LEDs as turned off
+        self.switch_all(False)
+
+        # Setup RGB LED stip click handlers
         for led in self.ui.led_array:
             led.mousePressEvent = self.set_color
 
-        self.ui.pushButton_leds_on.clicked.connect(lambda: self.switch_all(True))#обработка кнопк включения индикаторов
-        self.ui.pushButton_leds_off.clicked.connect(lambda: self.switch_all(False))#обработка кнопки выключения индикаторов
-        self.ui.pushButton_leds_color.clicked.connect(self.set_color_all)#обработка кнопки изменения цвета индикаторов 
+        # Setup handlers for packet RGB LED changing  
+        self.ui.pushButton_leds_on.clicked.connect(lambda: self.switch_all(True)) # обработка кнопк включения индикаторов
+        self.ui.pushButton_leds_off.clicked.connect(lambda: self.switch_all(False)) # обработка кнопки выключения индикаторов
+        self.ui.pushButton_leds_color.clicked.connect(lambda: self.set_color_all()) # обработка кнопки изменения цвета индикаторов 
+
+        # Init timer and connect data fetching with interval from defaults
+        self.timer = QTimer(self)
+        self.timer.setInterval(conf["defaultUpdateInterval"])
+        self.timer.timeout.connect(self.get_value_from_macket)
+
+        # Init autoupdate interval input
+        self.ui.spinBox_autoupdate.setValue(conf["defaultUpdateInterval"] // 1000)
+
+        # Setup autoupdate interval updating on input change
+        self.ui.spinBox_autoupdate.valueChanged.connect(lambda i: self.timer.setInterval(i * 1000))
+
+        # Setup autoupdate toggler
+        self.ui.checkBox_autoupdate.stateChanged.connect(self.handle_toggle_autoupdate)
 
 
-    def handle_toggle_lamp(self, Name: str, checked: bool):
-
+    def handle_toggle_autoupdate(self):
         """
-        Переключение одноцветных лампочек
+        Toggles timer
         """
 
-        n = Name[-1]
-        
-        # TODO: переписать названия пушей и лейблов
-        # сделано
-        if checked: 
-            getattr(self.ui, 'pushButton_switch_lamp' + n).setText("Выкл")
-            getattr(self.ui, 'label_lamp_on' + n).hide() 
-            getattr(self.ui, 'label_lamp_off' + n).show() 
-
-            print("I'm worked too much") # TODO: нужно что-то более осмысленное
+        if self.ui.checkBox_autoupdate.isChecked():
+            interval_s = self.ui.spinBox_autoupdate.value()
+            self.timer.start(interval_s * 1000)
         else:
-            getattr(self.ui, 'label_lamp_off' + n).hide()
-            getattr(self.ui, 'label_lamp_on' + n).show()
-            getattr(self.ui, 'pushButton_switch_lamp' + n).setText("Вкл")
+            self.timer.stop()
 
-            print ("I'm worked too")    # TODO: нужно что-то более осмысленное
+    def with_autosend(func):
+        """
+        Decorator for doing automatic post request after function invocation
+        """
+
+        def wrapper(self, *args, **kwargs): # the fuction that will be called as handler args - positional arguments, kwargs - named arguments
+            func(self, *args, **kwargs) # calling actual handler
+
+            if self.ui.checkBox_autoupdate.isChecked():
+                self.send_message()
+
+        return wrapper
 
 
-    def collect_lamps_state(self) -> dict:
+    @with_autosend
+    def handle_toggle_lamp(self, n: int, checked: bool):
+        """
+        Toggles lamps in interface
+        """
+
+        pushButton_switch_lamp = getattr(self.ui, f'pushButton_switch_lamp{n}')
+        label_lamp_on = getattr(self.ui, f'label_lamp_on{n}')
+        label_lamp_off = getattr(self.ui, f'label_lamp_off{n}')
+        
+        if checked: 
+            pushButton_switch_lamp.setText("Выкл")
+            pushButton_switch_lamp.setChecked(True)
+            label_lamp_on.show() 
+            label_lamp_off.hide()
+        else:
+            pushButton_switch_lamp.setText("Вкл")
+            pushButton_switch_lamp.setChecked(False)
+            label_lamp_on.hide()
+            label_lamp_off.show()
+
+
+    @with_autosend
+    def switch_all(self, on: bool):
+        """
+        Switches all RGB LEDs in strip on or off
+        """
+
+        if on:
+            for led in self.ui.led_array:
+                self.paint_led_color(led, QColor(255, 255, 255))
+        else:
+            for led in self.ui.led_array:
+                self.paint_led_color(led, QColor(0, 0, 0))
+
+
+    @with_autosend
+    def set_color_all(self):
+        """
+        Sets color using dialog for all RGB LEDs in strip
+        """
+
+        color = QColorDialog.getColor()
+
+        if color.isValid():
+            palette = QPalette()
+            palette.setColor(QPalette.Button, color)
+            self.ui.pushButton_leds_color.setPalette(palette)
+
+            for led in self.ui.led_array:
+                self.paint_led_color(led, color)
+
+
+    @with_autosend
+    def set_color(self, event: QMouseEvent):
+        """
+        Asks in dialog and updates color of single RGB LED
+        """
+
+        sender = QApplication.widgetAt(event.globalPos()) 
+        colors = sender.palette().color(QPalette.Background)
+        color = QColorDialog.getColor()
+        if color.isValid():
+            self.paint_led_color(sender, color)
+        else:
+            self.paint_led_color(sender, QColor(0, 0, 0))
+
+    def paint_led_color(self, led: QLabel, color: QColor):
+        """
+        Actually sets RGB LED color in interface and state storage
+        """
+
+        led.setStyleSheet(f"background-color: rgb({','.join(map(lambda c: str(getattr(color, c)()), RGB))})")
+
+        for c in RGB:
+            self.rgb_leds_state[led.objectName()][c] = getattr(color, c)()
+
+
+    def collect_lamps_state(self) -> dict[str, bool]:
+        """
+        Composes proper object structure with lamps state 
+        """
+
         lamps_state = {}
 
         for i in range(1,4):
@@ -140,68 +223,41 @@ class AppWindow(QMainWindow):
 
         return lamps_state
 
-    # ПРАВКА######
-    def switch_all(self, cond: bool):
-        
-        if cond:
-            for led in self.ui.led_array:
-                led.setStyleSheet(f"background-color: white;")
-                for s in RGB:
-                    self.led_data[led.objectName()][s] = 255
-                
-        else:
-            for led in self.ui.led_array:
-                led.setStyleSheet(f"background-color: black;")
-                for s in RGB:
-                        self.led_data[led.objectName()][s] = 0
 
-
-    def set_color_all(self): #метод изменения цвета индикаторам led
-        color = QColorDialog.getColor() #получение цвета, который пользователь выберет в спец. окне
-        if color.isValid():
-            palette = QPalette()
-            palette.setColor(QPalette.Button, color) 
-            self.ui.pushButton_leds_color.setPalette(palette)
-            for led in self.ui.led_array:
-                led.setStyleSheet(f"background-color: {color.name()};")
-                for s in RGB:
-                    self.led_data[led.objectName()][s] = getattr(color, s)()
-
-    
-    def set_color(self, event): 
-        sender = QApplication.widgetAt(event.globalPos()) 
-        colors = sender.palette().color(QPalette.Background)  ##????????  раньше был colors = led.palette().color(QPalette.Background) нужно проверить
-        color = QColorDialog.getColor()
-        if color.isValid():
-            sender.setStyleSheet(f"background-color: {color.name()};")
-            for s in RGB:
-                    self.led_data[sender.objectName()][s] = getattr(color, s)()
-        else:
-             self.ui.leds.setStyleSheet(" ")
-##########
-
-
-    def compose_post_json_data(self) -> dict:
+    def compose_post_json_data(self) -> dict:        
         json_data = {}
 
         json_data.update(self.rgb_leds_state)
         json_data.update(self.collect_lamps_state())
-
-        # TODO: добавить отправку остальных данных (см. grdive и поля, которые парсит приложение из stand_code/mDNS_ESP8266.ino)
         
         return json_data
 
 
-    def log_post_request(self, url, json_data):
+    def log_post_request(self, url: str, json_data: dict):
         json_str = json.dumps(json_data, separators=(',', ':'))
 
         data_str = 'Я отправляю текст на: ' + url + '\n'+ json_str
 
-        self.ui.textEdit_message.setPlainText(data_str)
+        self.ui.textEdit_message.append(data_str)
     
 
-    def send_message(self):
+    def with_cancel(reply_name: str): # retuns decorator with argument enclosed
+        """
+        Decorator for cancelling previous request of same type
+        """
+        def inner(func): # function decorator
+            def wrapper(self): # the fuction that will be called as handler
+                if hasattr(self, reply_name):
+                    getattr(self, reply_name).abort() # abort currently pending request
+                
+                func(self) # calling actual handler
+                
+            return wrapper
 
+        return inner
+
+    @with_cancel('POST_reply')
+    def send_message(self):
         """
         POST запрос
         """
@@ -223,14 +279,14 @@ class AppWindow(QMainWindow):
         request.setRawHeader(b'Accept', b'text/plain')
 
         # Do POST request and store its reply object
-        self.post_reply = self.nam.post(request, data.toJson())
+        self.POST_reply = self.nam.post(request, data.toJson())
 
         # Set callback for request finishing signal
-        self.post_reply.finished.connect(self.handle_post_reply)
+        self.POST_reply.finished.connect(self.handle_post_reply)
 
 
-    def get_value_from_macket(self):   ###переименовать элементы, которые находятся в for'aх 
-        
+    @with_cancel('GET_reply')
+    def get_value_from_macket(self):
         """
         GET запрос
         """
@@ -239,96 +295,88 @@ class AppWindow(QMainWindow):
 
         request = QNetworkRequest(QUrl(url))
 
-        self.get_reply = self.nam.get(request)
+        self.GET_reply = self.nam.get(request)
 
         # Set callback for request finishing signal
-        self.get_reply.finished.connect(self.handle_get_reply)
+        self.GET_reply.finished.connect(self.handle_get_reply)
 
 
     # TODO: если кто хочет поупражняться в понимании, что здесь происходит, напишите аннотацию для всех аргументов функции, используя typing.Callable (just google it)
     def with_err_handling(reply_name: str): # retuns decorator with argument enclosed
+        """
+        Decorator for error and cancellation of request handling
+        """
+        
+        operation = reply_name.split('_')[0]
         def inner(func): # function decorator
             def wrapper(self): # the fuction that will be called as handler
-                reply = getattr(self, reply_name) # gets actual reply by its name (ex: self.get_reply)
+                reply = getattr(self, reply_name) # gets actual reply by its name (ex: self.GET_reply)
                 
                 err = reply.error()
 
                 if err == QNetworkReply.NetworkError.NoError:
-                    self.ui.textEdit_message.append('О, все прошло успешно!')
+                    self.ui.textEdit_message.append(f'О, {operation} запрос прошёл успешно!')
                     func(self) # calling actual handler
+                elif err == QNetworkReply.NetworkError.OperationCanceledError:
+                    self.ui.textEdit_message.append(f"{operation} запрос был отменён, так как не успел выполниться до нового вызова")
                 else:
                     status_code = reply.attribute(QNetworkRequest.Attribute.HttpStatusCodeAttribute)
-                    self.ui.textEdit_message.append(f'Ошибка при получении данных: {status_code}')
+                    self.ui.textEdit_message.append(f'Ошибка при {operation} запросе: {status_code}')
 
             return wrapper
 
         return inner #это не игрок в hearthstone
 
 
-    @with_err_handling('post_reply')
+    @with_err_handling('POST_reply')
     def handle_post_reply(self):
-        res = self.post_reply.readAll().data()
+        res = self.POST_reply.readAll().data()
 
         self.ui.textEdit_message.append(res.decode())
 
 
-    @with_err_handling('get_reply')
+    @with_err_handling('GET_reply')
     def handle_get_reply(self):
-        res = self.get_reply.readAll().data()
+        res = self.GET_reply.readAll().data()
 
         data = json.loads(res) #функция преобразования данных в объект питон
         
         self.ui.textEdit_message.append(json.dumps(data, separators=(',', ':'))) #выводим значение в line_edit
 
-        self.ui.textEdit_message.append(str(data["temperature"]))
+        # Update lamps
+        for i in range(1,4):
+            self.handle_toggle_lamp(i, data[f"LED{i}"])
         
+        # convert buttons 
         buttons_status = list()
         for i in range(1, 4):
             buttons_status.append(data[f"button{i}State"])
-        """"
-        bs.append(data["button1State"])
-        bs.append(data["button2State"])
-        bs.append(data["button3State"])
-        """
+            
         self.update_buttons(buttons_status)
-
-        self.update_pressure(data["pressure"])
         
-        color_l=("ambient_light", "red_light", "green_light", "blue_light", "lightness","acceleration_x", "acceleration_y", "acceleration_z" )
+        # Update LCDs
+        color_l=("ambient_light", "red_light", "green_light", "blue_light", "lightness","acceleration_x", "acceleration_y", "acceleration_z", "pressure")
 
-        # TODO: переименовать lcdNumber_N в lcdNumber_....._light
         for s in color_l:
             getattr(self.ui, "lcd_" + s).display(data[s])
-        """
-        self.ui.lcdNumber_7.display(data["ambient_light"])
-        self.ui.lcdNumber_2.display (data["red_light"])
-        self.ui.lcdNumber_3.display (data["green_light"])
-        self.ui.lcdNumber_4.display (data["blue_light"])
-        self.ui.lcdNumber_8.display (data["lightness"])
-        self.ui.lcdNumber_5.display(data["acceleration_x"])
-        self.ui.lcdNumber_9.display (data["acceleration_y"])
-        self.ui.lcdNumber_6.display (data["acceleration_z"])
-        """
 
-        for i in range(1,4):
-            self.handle_toggle_lamp[f"LED{i}", data[f"LED{i}"]]
-
+        # Append dot to plot
         self.plot.update(data["temperature"])
 
 
-    def update_buttons(self, bs):#на панели есть 3 тумблера, данный метод осуществляет их обработку
-        for i in range(1, 4): 
-            button_state = bs[i-1]
-            if button_state == 'True':
-                getattr(self.ui, f'label_tumbler_on{i}').show()
-                getattr(self.ui, f'label_tumbler_off_{i}').hide()
+    def update_buttons(self, bs: list[bool]):
+        for i in range(1, 4):
+            button_on = bs[i-1]
+
+            label_tumbler_on = getattr(self.ui, f'label_tumbler_on{i}')
+            label_tumbler_off = getattr(self.ui, f'label_tumbler_off{i}')
+            
+            if button_on:
+                label_tumbler_on.show()
+                label_tumbler_off.hide()
             else:
-                getattr(self.ui, f'label_tumbler_on_{i}').hide()
-                getattr(self.ui, f'label_tumbler_off_{i}').show()
-
-
-    def update_pressure(self, p):
-        self.ui.lcd_pressure.display(p)
+                label_tumbler_on.hide()
+                label_tumbler_off.show()
 
 
 
