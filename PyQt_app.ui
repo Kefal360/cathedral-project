@@ -49,10 +49,10 @@
      </rect>
     </property>
     <property name="text">
-     <string>GET URL</string>
+     <string>POST URL</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEdit_URL">
+   <widget class="QLineEdit" name="lineEdit_POST_URL">
     <property name="geometry">
      <rect>
       <x>430</x>
@@ -75,7 +75,7 @@
      <string>Журнал запросов</string>
     </property>
    </widget>
-   <widget class="QLCDNumber" name="lcd_temp">
+   <widget class="QLCDNumber" name="lcd_temperature">
     <property name="geometry">
      <rect>
       <x>550</x>
@@ -103,7 +103,6 @@
     <property name="font">
      <font>
       <pointsize>8</pointsize>
-      <weight>50</weight>
       <bold>false</bold>
      </font>
     </property>
@@ -128,7 +127,6 @@
     </property>
     <property name="font">
      <font>
-      <weight>50</weight>
       <bold>false</bold>
      </font>
     </property>
@@ -235,7 +233,7 @@
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap resource="../res/Res.qrc">:/img/off.svg</pixmap>
+     <pixmap resource="res/Res.qrc">:/img/off.svg</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -254,7 +252,7 @@
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap resource="../res/Res.qrc">:/img/ON.svg</pixmap>
+     <pixmap resource="res/Res.qrc">:/img/ON.svg</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -273,7 +271,7 @@
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap resource="../res/Res.qrc">:/img/led_on.svg</pixmap>
+     <pixmap resource="res/Res.qrc">:/img/led_on.svg</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -295,7 +293,7 @@
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap resource="../res/Res.qrc">:/img/led_off.svg</pixmap>
+     <pixmap resource="res/Res.qrc">:/img/led_off.svg</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -340,7 +338,7 @@
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap resource="../res/Res.qrc">:/img/led_on.svg</pixmap>
+     <pixmap resource="res/Res.qrc">:/img/led_on.svg</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -359,7 +357,7 @@
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap resource="../res/Res.qrc">:/img/led_off.svg</pixmap>
+     <pixmap resource="res/Res.qrc">:/img/led_off.svg</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -391,7 +389,7 @@
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap resource="../res/Res.qrc">:/img/led_on.svg</pixmap>
+     <pixmap resource="res/Res.qrc">:/img/led_on.svg</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -410,7 +408,7 @@
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap resource="../res/Res.qrc">:/img/led_off.svg</pixmap>
+     <pixmap resource="res/Res.qrc">:/img/led_off.svg</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -429,7 +427,7 @@
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap resource="../res/Res.qrc">:/img/off.svg</pixmap>
+     <pixmap resource="res/Res.qrc">:/img/off.svg</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -448,7 +446,7 @@
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap resource="../res/Res.qrc">:/img/ON.svg</pixmap>
+     <pixmap resource="res/Res.qrc">:/img/ON.svg</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -467,7 +465,7 @@
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap resource="../res/Res.qrc">:/img/off.svg</pixmap>
+     <pixmap resource="res/Res.qrc">:/img/off.svg</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -486,7 +484,7 @@
      <string/>
     </property>
     <property name="pixmap">
-     <pixmap resource="../res/Res.qrc">:/img/ON.svg</pixmap>
+     <pixmap resource="res/Res.qrc">:/img/ON.svg</pixmap>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
@@ -504,7 +502,6 @@
     <property name="font">
      <font>
       <pointsize>8</pointsize>
-      <weight>50</weight>
       <bold>false</bold>
      </font>
     </property>
@@ -556,7 +553,6 @@
     <property name="font">
      <font>
       <pointsize>8</pointsize>
-      <weight>50</weight>
       <bold>false</bold>
      </font>
     </property>
@@ -564,7 +560,7 @@
      <string>Освещенность</string>
     </property>
    </widget>
-   <widget class="QLCDNumber" name="lcd_abient_light">
+   <widget class="QLCDNumber" name="lcd_ambient_light">
     <property name="geometry">
      <rect>
       <x>550</x>
@@ -592,7 +588,6 @@
     <property name="font">
      <font>
       <pointsize>8</pointsize>
-      <weight>50</weight>
       <bold>false</bold>
      </font>
     </property>
@@ -612,7 +607,6 @@
     <property name="font">
      <font>
       <pointsize>8</pointsize>
-      <weight>50</weight>
       <bold>false</bold>
      </font>
     </property>
@@ -847,7 +841,6 @@
     </property>
     <property name="font">
      <font>
-      <weight>50</weight>
       <bold>false</bold>
      </font>
     </property>
@@ -896,7 +889,7 @@
      <enum>QLCDNumber::Flat</enum>
     </property>
    </widget>
-   <widget class="QLabel" name="label_abient_light">
+   <widget class="QLabel" name="label_ambient_light">
     <property name="geometry">
      <rect>
       <x>310</x>
@@ -908,7 +901,6 @@
     <property name="font">
      <font>
       <pointsize>8</pointsize>
-      <weight>50</weight>
       <bold>false</bold>
      </font>
     </property>
@@ -968,7 +960,6 @@
      <font>
       <family>MS Shell Dlg 2</family>
       <pointsize>8</pointsize>
-      <weight>50</weight>
       <bold>false</bold>
      </font>
     </property>
@@ -999,7 +990,7 @@
      <string>Отправить GET запрос</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEdit_request">
+   <widget class="QLineEdit" name="lineEdit_GET_URL">
     <property name="geometry">
      <rect>
       <x>430</x>
@@ -1048,7 +1039,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>POST URL</string>
+     <string>GET URL</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_secends">
@@ -1071,12 +1062,13 @@
      <x>0</x>
      <y>0</y>
      <width>1185</width>
-     <height>18</height>
+     <height>28</height>
     </rect>
    </property>
   </widget>
  </widget>
  <resources>
+  <include location="res/Res.qrc"/>
   <include location="../res/Res.qrc"/>
  </resources>
  <connections/>

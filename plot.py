@@ -10,8 +10,13 @@ class Plot():
     QT bar plot drawing class
     """
 
-    def __init__(self, widget, arr_len = 20, default_val = 20):
-        self.__arr_vals = [default_val] * arr_len # TODO: Инициализировать значениями из conf["temperature"]
+    def __init__(self, widget, arr_len = 20, default_val = 20, initial_array = []):
+        if initial_array:
+            self.__arr_vals = initial_array
+            arr_len = len(initial_array)
+        else:
+            self.__arr_vals = [default_val] * arr_len
+
         self.__x = list(range(1, arr_len + 1))
 
         self.__plot = pg.plot() #создает объект PlotWidget из библиотеки PyqtGraph

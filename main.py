@@ -55,20 +55,19 @@ class AppWindow(QMainWindow):
         self.nam = QNetworkAccessManager()
 
         # Init plotter
-        self.plot = Plot(self.ui.plotwidget)
+        self.plot = Plot(self.ui.plotwidget, initial_array=conf["temperature"])
 
         # Set window title
         self.setWindowTitle("Lr4")
 
         # Init request url editors
-        self.ui.lineEdit_URL.setText("http://" + conf['defaultMDNSname'] + conf['defaultPostRoute'])
-        self.ui.lineEdit_request.setText("http://" + conf['defaultMDNSname'] + conf['defaultGetRoute'])
+        self.ui.lineEdit_POST_URL.setText("http://" + conf['defaultMDNSname'] + conf['defaultPostRoute'])
+        self.ui.lineEdit_GET_URL.setText("http://" + conf['defaultMDNSname'] + conf['defaultGetRoute'])
 
         # Init LED controls
         for i in range(1, 4):
             getattr(self.ui, f"pushButton_switch_lamp{i}").setCheckable(True) # вкл режим перекл
-            getattr(self.ui, f"pushButton_switch_lamp{i}").setChecked(False) # нач значение
-            getattr(self.ui, f"label_lamp_on{i}").hide()
+            self.handle_toggle_lamp(i, conf[f"LED{i}"])
             getattr(self.ui, f"pushButton_switch_lamp{i}").toggled["bool"].connect(lambda val, i=i: self.handle_toggle_lamp(i, val))
 
         # Setup request manual triggers
@@ -81,8 +80,13 @@ class AppWindow(QMainWindow):
         # Store RGB LEDs default values
         self.rgb_leds_state = conf["defaultRGBLeds"]
 
-        # Init RGB LEDs as turned off
-        self.switch_all(False)
+        self.update_colors(self.rgb_leds_state)
+
+        self.update_buttons(self.convert_buttons_state(conf))
+
+        # Init LCDs values
+        self.update_lcds(conf)
+        self.ui.lcd_temperature.display(conf["temperature"][-1])
 
         # Setup RGB LED stip click handlers
         for led in self.ui.led_array:
@@ -107,6 +111,8 @@ class AppWindow(QMainWindow):
         # Setup autoupdate toggler
         self.ui.checkBox_autoupdate.stateChanged.connect(self.handle_toggle_autoupdate)
 
+        self.ui.checkBox_autoupdate.setChecked(conf["startWithAutoupdate"])
+
 
     def handle_toggle_autoupdate(self):
         """
@@ -116,6 +122,8 @@ class AppWindow(QMainWindow):
         if self.ui.checkBox_autoupdate.isChecked():
             interval_s = self.ui.spinBox_autoupdate.value()
             self.timer.start(interval_s * 1000)
+
+            self.timer.timeout.emit() # Trigger timer event immediately
         else:
             self.timer.stop()
 
@@ -263,7 +271,7 @@ class AppWindow(QMainWindow):
         """
 
         # Get inputed url
-        url = self.ui.lineEdit_URL.text()  
+        url = self.ui.lineEdit_POST_URL.text()  
 
         # compose body
         json_data = self.compose_post_json_data()
@@ -291,7 +299,7 @@ class AppWindow(QMainWindow):
         GET запрос
         """
         
-        url = self.ui.lineEdit_request.text()
+        url = self.ui.lineEdit_GET_URL.text()
 
         request = QNetworkRequest(QUrl(url))
 
@@ -319,9 +327,23 @@ class AppWindow(QMainWindow):
                     func(self) # calling actual handler
                 elif err == QNetworkReply.NetworkError.OperationCanceledError:
                     self.ui.textEdit_message.append(f"{operation} запрос был отменён, так как не успел выполниться до нового вызова")
+                elif err == QNetworkReply.NetworkError.TemporaryNetworkFailureError:
+                    self.ui.textEdit_message.append(f"Произошла временная ошибка при {operation} запросе, повторите запрос ещё раз")
                 else:
-                    status_code = reply.attribute(QNetworkRequest.Attribute.HttpStatusCodeAttribute)
-                    self.ui.textEdit_message.append(f'Ошибка при {operation} запросе: {status_code}')
+                    msg = f"Ошибка при {operation} запросе: "
+                    if (err == QNetworkReply.NetworkError.ConnectionRefusedError 
+                        or err == QNetworkReply.NetworkError.RemoteHostClosedError
+                        or err == QNetworkReply.NetworkError.HostNotFoundError
+                        or err == QNetworkReply.NetworkError.TimeoutError
+                        or err == QNetworkReply.NetworkError.SslHandshakeFailedError
+                        or err == QNetworkReply.NetworkError.NetworkSessionFailedError
+                        or err == QNetworkReply.NetworkError.BackgroundRequestNotAllowedError
+                        or err == QNetworkReply.NetworkError.TooManyRedirectsError
+                        or err == QNetworkReply.NetworkError.InsecureRedirectError):
+                        self.ui.textEdit_message.append(msg + 'не удалось установить подключение к серверу')
+                    else:
+                        status_code = reply.attribute(QNetworkRequest.Attribute.HttpStatusCodeAttribute)
+                        self.ui.textEdit_message.append(msg + f'сервер вернул статус код {status_code}')
 
             return wrapper
 
@@ -347,22 +369,31 @@ class AppWindow(QMainWindow):
         for i in range(1,4):
             self.handle_toggle_lamp(i, data[f"LED{i}"])
         
-        # convert buttons 
+        self.update_buttons(self.convert_buttons_state(data))
+        
+        # Update LCDs
+        self.update_lcds(data)
+
+        # Append dot to plot and set corresponding LCD
+        self.plot.update(data["temperature"])
+        self.ui.lcd_temperature.display(data["temperature"])
+
+        self.update_colors(data)
+
+    
+    def convert_buttons_state(self, data: dict[str, bool]) -> list[bool]:
         buttons_status = list()
         for i in range(1, 4):
             buttons_status.append(data[f"button{i}State"])
-            
-        self.update_buttons(buttons_status)
-        
-        # Update LCDs
-        color_l=("ambient_light", "red_light", "green_light", "blue_light", "lightness","acceleration_x", "acceleration_y", "acceleration_z", "pressure")
+
+        return buttons_status
+
+
+    def update_lcds(self, data: dict):
+        color_l=("ambient_light", "red_light", "green_light", "blue_light", "lightness", "acceleration_x", "acceleration_y", "acceleration_z", "pressure")
 
         for s in color_l:
             getattr(self.ui, "lcd_" + s).display(data[s])
-
-        # Append dot to plot
-        self.plot.update(data["temperature"])
-
 
     def update_buttons(self, bs: list[bool]):
         for i in range(1, 4):
@@ -377,6 +408,15 @@ class AppWindow(QMainWindow):
             else:
                 label_tumbler_on.hide()
                 label_tumbler_off.show()
+
+
+    def update_colors(self, new_state: dict[str, dict[int]]):
+        for name in self.rgb_leds_state.keys():
+            self.rgb_leds_state[name] = new_state[name]
+            self.paint_led_color(
+                getattr(self.ui, name),
+                QColor(*list(map(lambda c: new_state[name][c], RGB)))
+            )
 
 
 
