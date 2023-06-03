@@ -117,7 +117,7 @@ class AppWindow(QMainWindow):
         
         # TODO: переписать названия пушей и лейблов
         if checked: 
-            getattr(self.ui, 'pushButton_' + n).setText("Выкл")
+            getattr(self.ui, 'pushButton_switch_lamp' + n).setText("Выкл")
             getattr(self.ui, 'label_' + n + '4').hide() 
             getattr(self.ui, 'label_' + n + '0').show() 
 
@@ -296,7 +296,7 @@ class AppWindow(QMainWindow):
 
         # TODO: переименовать lcdNumber_N в lcdNumber_....._light
         for s in color_l:
-            getattr(self.ui, "lcdNumber_" + s).display(data[s])
+            getattr(self.ui, "lcd_" + s).display(data[s])
         """
         self.ui.lcdNumber_7.display(data["ambient_light"])
         self.ui.lcdNumber_2.display (data["red_light"])
