@@ -160,7 +160,7 @@ class AppWindow(QMainWindow):
         if color.isValid():
             palette = QPalette()
             palette.setColor(QPalette.Button, color) 
-            self.color_b.setPalette(palette)
+            self.ui.pushButton_leds_color.setPalette(palette)
             for led in self.ui.led_array:
                 led.setStyleSheet(f"background-color: {color.name()};")
                 for s in RGB:
