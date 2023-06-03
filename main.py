@@ -119,14 +119,14 @@ class AppWindow(QMainWindow):
         # TODO: переписать названия пушей и лейблов
         if checked: 
             getattr(self.ui, 'pushButton_switch_lamp' + n).setText("Выкл")
-            getattr(self.ui, 'label_' + n + '4').hide() 
-            getattr(self.ui, 'label_' + n + '0').show() 
+            getattr(self.ui, 'label_lamp_on' + n).hide() 
+            getattr(self.ui, 'label_lamp_off' + n).show() 
 
             print("I'm worked too much") # TODO: нужно что-то более осмысленное
         else:
-            getattr(self.ui, 'label_' + n + '0').hide()
-            getattr(self.ui, 'label_' + n + '4').show()
-            getattr(self.ui, 'pushButton_' + n).setText("Вкл")
+            getattr(self.ui, 'label_lamp_off' + n).hide()
+            getattr(self.ui, 'label_lamp_on' + n).show()
+            getattr(self.ui, 'pushButton_switch_lamp' + n).setText("Вкл")
 
             print ("I'm worked too")    # TODO: нужно что-то более осмысленное
 
@@ -315,8 +315,8 @@ class AppWindow(QMainWindow):
         self.plot.update(data["temperature"])
 
 
-    def update_buttons(self, bs):
-        for i in range(1, 4):
+    def update_buttons(self, bs):#на панели 3 тумблера, данная функция осуществляет их обработку
+        for i in range(1, 4): 
             button_state = bs[i-1]
             if button_state == 'True':
                 getattr(self.ui, f'label_tumbler_on{i}').show()
