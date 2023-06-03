@@ -105,6 +105,7 @@ class AppWindow(QMainWindow):
 
         self.ui.pushButton_leds_on.clicked.connect(lambda: self.switch_all(True))
         self.ui.pushButton_leds_off.clicked.connect(lambda: self.switch_all(False))
+        self.ui.pushButton_leds_color.clicked.connect(self.set_color_all)
 
 
     def handle_toggle_lamp(self, Name: str, checked: bool):
