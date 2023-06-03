@@ -14,17 +14,17 @@ label_10 = label_x
 label_11 = label_y
 label_12 = label_z
 
-label_24 = label_lamp1_off 
-label_27 = label_lamp2_off
-label_31 = label_lamp3_off
+label_24 = label_lamp_off1 (label_sensor_print)
+label_27 = label_lamp_off2
+label_31 = label_lamp_off3
 
-label_20 = label_lamp1_on 
-label_26 = label_lamp2_on
-label_29 = label_lamp3_on 
+label_20 = label_lamp_on1 
+label_26 = label_lamp_on2 (label_sensor_megalka2)
+label_29 = label_lamp_on3 
 
 pushButton = pushButton_send_post
 pushButton_5 = pushButton_send_get
-pushButton_2 = pushButton_switch_lamp1
+pushButton_2 = pushButton_switch_lamp1(pushButton_sensor1)
 pushButton_3 = pushButton_switch_lamp2
 pushButton_4 = pushButton_switch_lamp3
 

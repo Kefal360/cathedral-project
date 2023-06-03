@@ -260,7 +260,7 @@
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QLabel" name="label_lamp1_on">
+   <widget class="QLabel" name="label_lamp_on1">
     <property name="geometry">
      <rect>
       <x>390</x>
@@ -279,7 +279,7 @@
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QLabel" name="label_lamp1_off">
+   <widget class="QLabel" name="label_lamp_off1">
     <property name="enabled">
      <bool>true</bool>
     </property>
@@ -327,7 +327,7 @@
      <string>Вкл</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_lamp2_on">
+   <widget class="QLabel" name="label_lamp_on2">
     <property name="geometry">
      <rect>
       <x>480</x>
@@ -346,7 +346,7 @@
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QLabel" name="label_lamp2_off">
+   <widget class="QLabel" name="label_lamp_off2">
     <property name="geometry">
      <rect>
       <x>480</x>
@@ -378,7 +378,7 @@
      <string>Вкл</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_lamp3_on">
+   <widget class="QLabel" name="label_lamp_on3">
     <property name="geometry">
      <rect>
       <x>570</x>
@@ -397,7 +397,7 @@
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QLabel" name="label_lamp3_off">
+   <widget class="QLabel" name="label_lamp_off3">
     <property name="geometry">
      <rect>
       <x>570</x>
