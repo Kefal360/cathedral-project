@@ -36,28 +36,28 @@
      </rect>
     </property>
     <property name="text">
-     <string>SEND Post</string>
+     <string>Отправить POST запрос</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_url">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>310</x>
       <y>0</y>
-      <width>51</width>
+      <width>41</width>
       <height>41</height>
      </rect>
     </property>
     <property name="text">
-     <string>URL</string>
+     <string>Get URL</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="lineEdit_URL">
     <property name="geometry">
      <rect>
-      <x>50</x>
+      <x>350</x>
       <y>10</y>
-      <width>981</width>
+      <width>681</width>
       <height>21</height>
      </rect>
     </property>
@@ -72,7 +72,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Body message</string>
+     <string>Журнал запросов</string>
     </property>
    </widget>
    <widget class="QLCDNumber" name="lcd_temp">
@@ -117,7 +117,7 @@
      <bool>false</bool>
     </property>
    </widget>
-   <widget class="QLCDNumber" name="lcd_rgb_r">
+   <widget class="QLCDNumber" name="lcd_red_light">
     <property name="geometry">
      <rect>
       <x>540</x>
@@ -148,7 +148,7 @@
      <double>5.000000000000000</double>
     </property>
    </widget>
-   <widget class="QLCDNumber" name="lcd_rgb_g">
+   <widget class="QLCDNumber" name="lcd_green_light">
     <property name="geometry">
      <rect>
       <x>620</x>
@@ -167,7 +167,7 @@
      <double>5.000000000000000</double>
     </property>
    </widget>
-   <widget class="QLCDNumber" name="lcd_rgb_b">
+   <widget class="QLCDNumber" name="lcd_blue_light">
     <property name="geometry">
      <rect>
       <x>700</x>
@@ -226,7 +226,7 @@
     <property name="geometry">
      <rect>
       <x>804</x>
-      <y>100</y>
+      <y>110</y>
       <width>61</width>
       <height>51</height>
      </rect>
@@ -245,7 +245,7 @@
     <property name="geometry">
      <rect>
       <x>804</x>
-      <y>100</y>
+      <y>110</y>
       <width>61</width>
       <height>51</height>
      </rect>
@@ -420,7 +420,7 @@
     <property name="geometry">
      <rect>
       <x>904</x>
-      <y>100</y>
+      <y>110</y>
       <width>61</width>
       <height>51</height>
      </rect>
@@ -439,7 +439,7 @@
     <property name="geometry">
      <rect>
       <x>904</x>
-      <y>100</y>
+      <y>110</y>
       <width>61</width>
       <height>51</height>
      </rect>
@@ -458,7 +458,7 @@
     <property name="geometry">
      <rect>
       <x>994</x>
-      <y>100</y>
+      <y>110</y>
       <width>61</width>
       <height>51</height>
      </rect>
@@ -477,7 +477,7 @@
     <property name="geometry">
      <rect>
       <x>994</x>
-      <y>100</y>
+      <y>110</y>
       <width>61</width>
       <height>51</height>
      </rect>
@@ -528,7 +528,7 @@
      <double>5.000000000000000</double>
     </property>
    </widget>
-   <widget class="QLCDNumber" name="lcd_illumination">
+   <widget class="QLCDNumber" name="lcd_lightness">
     <property name="geometry">
      <rect>
       <x>550</x>
@@ -564,7 +564,7 @@
      <string>Освещенность</string>
     </property>
    </widget>
-   <widget class="QLCDNumber" name="lcd_illumination2">
+   <widget class="QLCDNumber" name="lcd_abient_light">
     <property name="geometry">
      <rect>
       <x>550</x>
@@ -597,7 +597,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Освещенность</string>
+     <string>Освещенность окружения</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_accelorometer">
@@ -836,7 +836,7 @@
      </rect>
     </property>
    </widget>
-   <widget class="QLCDNumber" name="lcd_xyz_x">
+   <widget class="QLCDNumber" name="lcd_acceleration_x">
     <property name="geometry">
      <rect>
       <x>540</x>
@@ -864,7 +864,7 @@
      <enum>QLCDNumber::Flat</enum>
     </property>
    </widget>
-   <widget class="QLCDNumber" name="lcd_xyz_z">
+   <widget class="QLCDNumber" name="lcd_acceleration_z">
     <property name="geometry">
      <rect>
       <x>700</x>
@@ -880,7 +880,7 @@
      <enum>QLCDNumber::Flat</enum>
     </property>
    </widget>
-   <widget class="QLCDNumber" name="lcd_xyz_y">
+   <widget class="QLCDNumber" name="lcd_acceleration_y">
     <property name="geometry">
      <rect>
       <x>620</x>
@@ -896,7 +896,7 @@
      <enum>QLCDNumber::Flat</enum>
     </property>
    </widget>
-   <widget class="QLabel" name="label_rgb_illumination">
+   <widget class="QLabel" name="label_abient_light">
     <property name="geometry">
      <rect>
       <x>310</x>
@@ -913,7 +913,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Освещенность</string>
+     <string>Освещенность RGB</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_x">
@@ -959,7 +959,7 @@
     <property name="geometry">
      <rect>
       <x>900</x>
-      <y>60</y>
+      <y>80</y>
       <width>81</width>
       <height>20</height>
      </rect>
@@ -990,23 +990,59 @@
     <property name="geometry">
      <rect>
       <x>1050</x>
-      <y>50</y>
+      <y>40</y>
       <width>101</width>
       <height>21</height>
      </rect>
     </property>
     <property name="text">
-     <string>SEND Get request</string>
+     <string>Отправить GET запрос</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="lineEdit_request">
     <property name="geometry">
      <rect>
-      <x>790</x>
+      <x>350</x>
       <y>40</y>
-      <width>241</width>
+      <width>681</width>
       <height>21</height>
      </rect>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBox_autoupdate">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>10</y>
+      <width>81</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Автообновление</string>
+    </property>
+   </widget>
+   <widget class="QTimeEdit" name="timeEdit_autoupdate">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>121</width>
+      <height>21</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_url_2">
+    <property name="geometry">
+     <rect>
+      <x>310</x>
+      <y>30</y>
+      <width>41</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Post URL</string>
     </property>
    </widget>
   </widget>

@@ -1,8 +1,8 @@
 label_6 = label_temp
 label_13 = label_pressure
 label_14 = label_illumination
-label_15 = label_illumination2
-label_16 = label_rgb_illumination
+label_15 = label_abient_light (label_illumination2)
+label_16 = label_abient_light
 label_34 = label_accelorometer
 label_4 = lubel_tumblers
 label = label_url
@@ -29,14 +29,14 @@ pushButton_3 = pushButton_switch_lamp2
 pushButton_4 = pushButton_switch_lamp3
 
 lcdNumber = lcd_temp
-lcdNumber_7 = lcd_illumination
-lcdNumber_8 = lcd_illumination2
-lcdNumber_2 = lcd_rgb_r
-lcdNumber_3= lcd_rgb_g
-lcdNumber_4 = lcd_rgb_b
-lcdNumber_5 = lcd_xyz_x
-lcdNumber_9 = lcd_xyz_y
-lcdNumber_6 = lcd_xyz_z
+lcdNumber_7 = lcd_lightness (lcd_illumination) 
+lcdNumber_8 = lcd_abient_light(lcd_illumination2)
+lcdNumber_2 = lcd_red_light (lcd_rgb_r)
+lcdNumber_3 = lcd_green_light(lcd_rgb_g)
+lcdNumber_4 = lcd_blue_light(lcd_rgb_b)
+lcdNumber_5 = lcd_acceleration_x (lcd_xyz_x)
+lcdNumber_9 = lcd_acceleration_y (lcd_xyz_y)
+lcdNumber_6 = lcd_acceleration_z (lcd_xyz_z)
 
 vikl_b = pushButton_leds_off
 vkl_b = pushButton_leds_on
