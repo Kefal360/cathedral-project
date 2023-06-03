@@ -3,7 +3,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets #импорт нужный библи
 from PyQt5 import uic
 from PyQt5.QtGui import QColor, QPalette
 from PyQt5.QtGui import QPixmap
-from PyQt5.QtCore import QTimer, QJsonDocument, QUrl
+from PyQt5.QtCore import QTimer, QJsonDocument, QUrl, QTime
 from PyQt5.QtWidgets import *
 from PyQt5.QtNetwork import QNetworkAccessManager, QNetworkRequest, QNetworkReply
 
@@ -16,6 +16,18 @@ from plot import Plot
 import Res_rc
 
 
+default_led_data = { #список из словарей с начальными параметрами у светодиодов, надо сделать его атрибутом главного класса 
+    "leds1": {"red": 0, "green": 0, "blue": 0},
+    "leds2": {"red": 0, "green": 0, "blue": 0},
+    "leds3": {"red": 0, "green": 0, "blue": 0},
+    "leds4": {"red": 0, "green": 0, "blue": 0},
+    "leds5": {"red": 0, "green": 0, "blue": 0},
+    "leds6": {"red": 0, "green": 0, "blue": 0},
+    "leds7": {"red": 0, "green": 0, "blue": 0},
+    "leds8": {"red": 0, "green": 0, "blue": 0},
+}
+
+RGB=['red', 'green',"blue"]
 
 def read_conf() -> dict:
 
@@ -85,7 +97,14 @@ class AppWindow(QMainWindow):
         self.ui.pushButton_send_post.clicked.connect(self.send_message) # привязываем функцию к кнопке Отправить
         self.ui.pushButton_send_get.clicked.connect(self.get_value_from_macket) # привязываем функцию к кнопке Отправить GET запрос
 
-        # TODO: добавить обработчики для смены цвета 8 светодиодов и ещё, чего не хватает (см. папку на gdrive и интерфейс приложения)
+        self.ui.led_array = [getattr(self.ui, f"leds{i}") for i in range(1,9)]
+        self.led_data=default_led_data
+
+        for led in self.ui.led_array:
+            led.mousePressEvent = self.set_color
+
+        self.ui.pushButton_leds_on.clicked.connect(lambda: self.switch_all(True))
+        self.ui.pushButton_leds_off.clicked.connect(lambda: self.switch_all(False))
 
 
     def handle_toggle_lamp(self, Name: str, checked: bool):
@@ -118,6 +137,46 @@ class AppWindow(QMainWindow):
             lamps_state[f"LED{i}"] = getattr(self.ui, f"label_lamp_on{i}").isVisible()
 
         return lamps_state
+
+    # ПРАВКА######
+    def switch_all(self, cond: bool):
+        
+        if cond:
+            for led in self.ui.led_array:
+                led.setStyleSheet(f"background-color: white;")
+                for s in RGB:
+                    self.led_data[led.objectName()][s] = 255
+                
+        else:
+            for led in self.ui.led_array:
+                led.setStyleSheet(f"background-color: black;")
+                for s in RGB:
+                        self.led_data[led.objectName()][s] = 0
+
+
+    def set_color_all(self):
+        color = QColorDialog.getColor()
+        if color.isValid():
+            palette = QPalette()
+            palette.setColor(QPalette.Button, color) 
+            self.color_b.setPalette(palette)
+            for led in self.ui.led_array:
+                led.setStyleSheet(f"background-color: {color.name()};")
+                for s in RGB:
+                    self.led_data[led.objectName()][s] = getattr(color, s)()
+
+    
+    def set_color(self, event):
+        sender = QApplication.widgetAt(event.globalPos()) 
+        colors = sender.palette().color(QPalette.Background)  ##????????  раньше был colors = led.palette().color(QPalette.Background) нужно проверить
+        color = QColorDialog.getColor()
+        if color.isValid():
+            sender.setStyleSheet(f"background-color: {color.name()};")
+            for s in RGB:
+                    self.led_data[sender.objectName()][s] = getattr(color, s)()
+        else:
+             self.ui.leds.setStyleSheet(" ")
+##########
 
 
     def compose_post_json_data(self) -> dict:
