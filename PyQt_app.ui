@@ -49,7 +49,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Get URL</string>
+     <string>GET URL</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="lineEdit_URL">
@@ -1048,7 +1048,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Post URL</string>
+     <string>POST URL</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_secends">
