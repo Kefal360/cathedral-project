@@ -103,9 +103,9 @@ class AppWindow(QMainWindow):
         for led in self.ui.led_array:
             led.mousePressEvent = self.set_color
 
-        self.ui.pushButton_leds_on.clicked.connect(lambda: self.switch_all(True))
-        self.ui.pushButton_leds_off.clicked.connect(lambda: self.switch_all(False))
-        self.ui.pushButton_leds_color.clicked.connect(self.set_color_all)
+        self.ui.pushButton_leds_on.clicked.connect(lambda: self.switch_all(True))#обработка кнопк включения индикаторов
+        self.ui.pushButton_leds_off.clicked.connect(lambda: self.switch_all(False))#обработка кнопки выключения индикаторов
+        self.ui.pushButton_leds_color.clicked.connect(self.set_color_all)#обработка кнопки изменения цвета индикаторов 
 
 
     def handle_toggle_lamp(self, Name: str, checked: bool):
@@ -117,6 +117,7 @@ class AppWindow(QMainWindow):
         n = Name[-1]
         
         # TODO: переписать названия пушей и лейблов
+        # сделано
         if checked: 
             getattr(self.ui, 'pushButton_switch_lamp' + n).setText("Выкл")
             getattr(self.ui, 'label_lamp_on' + n).hide() 
@@ -155,8 +156,8 @@ class AppWindow(QMainWindow):
                         self.led_data[led.objectName()][s] = 0
 
 
-    def set_color_all(self):
-        color = QColorDialog.getColor()
+    def set_color_all(self): #метод изменения цвета индикаторам led
+        color = QColorDialog.getColor() #получение цвета, который пользователь выберет в спец. окне
         if color.isValid():
             palette = QPalette()
             palette.setColor(QPalette.Button, color) 
@@ -167,7 +168,7 @@ class AppWindow(QMainWindow):
                     self.led_data[led.objectName()][s] = getattr(color, s)()
 
     
-    def set_color(self, event):
+    def set_color(self, event): 
         sender = QApplication.widgetAt(event.globalPos()) 
         colors = sender.palette().color(QPalette.Background)  ##????????  раньше был colors = led.palette().color(QPalette.Background) нужно проверить
         color = QColorDialog.getColor()
@@ -261,7 +262,7 @@ class AppWindow(QMainWindow):
 
             return wrapper
 
-        return inner
+        return inner #это не игрок в hearthstone
 
 
     @with_err_handling('post_reply')
@@ -315,7 +316,7 @@ class AppWindow(QMainWindow):
         self.plot.update(data["temperature"])
 
 
-    def update_buttons(self, bs):#на панели 3 тумблера, данная функция осуществляет их обработку
+    def update_buttons(self, bs):#на панели есть 3 тумблера, данный метод осуществляет их обработку
         for i in range(1, 4): 
             button_state = bs[i-1]
             if button_state == 'True':
