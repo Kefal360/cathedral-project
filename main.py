@@ -319,11 +319,11 @@ class AppWindow(QMainWindow):
         for i in range(1, 4):
             button_state = bs[i-1]
             if button_state == 'True':
-                getattr(self.ui, f'on_{i}').show()
-                getattr(self.ui, f'off_{i}').hide()
+                getattr(self.ui, f'label_tumbler_on{i}').show()
+                getattr(self.ui, f'label_tumbler_off_{i}').hide()
             else:
-                getattr(self.ui, f'on_{i}').hide()
-                getattr(self.ui, f'off_{i}').show()
+                getattr(self.ui, f'label_tumbler_on_{i}').hide()
+                getattr(self.ui, f'label_tumbler_off_{i}').show()
 
 
     def update_pressure(self, p):
