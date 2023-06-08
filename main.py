@@ -90,7 +90,7 @@ class AppWindow(QMainWindow):
         self.ui.pushButton_send_post.clicked.connect(self.send_message) # привязываем функцию к кнопке Отправить
         self.ui.pushButton_send_get.clicked.connect(self.get_value_from_macket) # привязываем функцию к кнопке Отправить GET запрос
 
-        # For convinience store RGB LED strip in list 
+        # For convenience store RGB LED strip in list 
         self.ui.led_array = [getattr(self.ui, f"leds{i}") for i in range(1,9)]
 
         # Store RGB LEDs default values
@@ -371,7 +371,7 @@ class AppWindow(QMainWindow):
 
         data = json.loads(res)  #    преобразование данных из джейсон 
         
-        self.ui.textEdit_message.append(json.dumps(data, separators=(',', ':'))) #  вывод значение в line_edit
+        self.ui.textEdit_message.append(json.dumps(data, separators=(',', ':'))) #  вывод значения в line_edit
 
         # Update lamps
         for i in range(1,4):
