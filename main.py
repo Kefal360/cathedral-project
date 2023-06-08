@@ -325,7 +325,6 @@ class AppWindow(QMainWindow):
         self.GET_reply.finished.connect(self.handle_get_reply)
 
 
-    # TODO: если кто хочет поупражняться в понимании, что здесь происходит, напишите аннотацию для всех аргументов функции, используя typing.Callable (just google it)
     def with_err_handling(reply_name: str): # retuns decorator with argument enclosed
         """
         Decorator for error and cancellation of request handling
