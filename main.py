@@ -15,7 +15,23 @@ import os
 from plot import Plot
 import Res_rc
 
+
+
 RGB = ['red', 'green',"blue"]
+
+CONNECTION_ERRORS = (
+    QNetworkReply.NetworkError.ConnectionRefusedError, 
+    QNetworkReply.NetworkError.RemoteHostClosedError, 
+    QNetworkReply.NetworkError.HostNotFoundError, 
+    QNetworkReply.NetworkError.TimeoutError, 
+    QNetworkReply.NetworkError.SslHandshakeFailedError, 
+    QNetworkReply.NetworkError.NetworkSessionFailedError, 
+    QNetworkReply.NetworkError.BackgroundRequestNotAllowedError, 
+    QNetworkReply.NetworkError.TooManyRedirectsError, 
+    QNetworkReply.NetworkError.InsecureRedirectError
+)
+
+
 
 def read_conf() -> dict:
     """
@@ -331,15 +347,7 @@ class AppWindow(QMainWindow):
                     self.ui.textEdit_message.append(f"Произошла временная ошибка при {operation} запросе, повторите запрос ещё раз")
                 else:
                     msg = f"Ошибка при {operation} запросе: "
-                    if (err == QNetworkReply.NetworkError.ConnectionRefusedError 
-                        or err == QNetworkReply.NetworkError.RemoteHostClosedError
-                        or err == QNetworkReply.NetworkError.HostNotFoundError
-                        or err == QNetworkReply.NetworkError.TimeoutError
-                        or err == QNetworkReply.NetworkError.SslHandshakeFailedError
-                        or err == QNetworkReply.NetworkError.NetworkSessionFailedError
-                        or err == QNetworkReply.NetworkError.BackgroundRequestNotAllowedError
-                        or err == QNetworkReply.NetworkError.TooManyRedirectsError
-                        or err == QNetworkReply.NetworkError.InsecureRedirectError):
+                    if (err in CONNECTION_ERRORS):
                         self.ui.textEdit_message.append(msg + 'не удалось установить подключение к серверу')
                     else:
                         status_code = reply.attribute(QNetworkRequest.Attribute.HttpStatusCodeAttribute)
