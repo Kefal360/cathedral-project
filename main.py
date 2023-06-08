@@ -104,7 +104,7 @@ class AppWindow(QMainWindow):
         self.update_lcds(conf)
         self.ui.lcd_temperature.display(conf["temperature"][-1])
 
-        # Setup RGB LED stip click handlers
+        # Setup RGB LED strip click handlers
         for led in self.ui.led_array:
             led.mousePressEvent = self.set_color
 
@@ -148,7 +148,7 @@ class AppWindow(QMainWindow):
         Decorator for doing automatic post request after function invocation
         """
 
-        def wrapper(self, *args, **kwargs): # the fuction that will be called as handler args - positional arguments, kwargs - named arguments
+        def wrapper(self, *args, **kwargs): # the function that will be called as handler args - positional arguments, kwargs - named arguments
             func(self, *args, **kwargs) # calling actual handler
 
             if self.ui.checkBox_autoupdate.isChecked():
@@ -265,12 +265,12 @@ class AppWindow(QMainWindow):
         self.ui.textEdit_message.append(data_str)
     
 
-    def with_cancel(reply_name: str): # retuns decorator with argument enclosed
+    def with_cancel(reply_name: str): # returns decorator with argument enclosed
         """
         Decorator for cancelling previous request of same type
         """
         def inner(func): # function decorator
-            def wrapper(self): # the fuction that will be called as handler
+            def wrapper(self): # the function that will be called as handler
                 if hasattr(self, reply_name):
                     getattr(self, reply_name).abort() # abort currently pending request
                 
@@ -286,7 +286,7 @@ class AppWindow(QMainWindow):
         POST запрос
         """
 
-        # Get inputed url
+        # Get inputted url
         url = self.ui.lineEdit_POST_URL.text()  
 
         # compose body
@@ -333,7 +333,7 @@ class AppWindow(QMainWindow):
         
         operation = reply_name.split('_')[0]
         def inner(func): # function decorator
-            def wrapper(self): # the fuction that will be called as handler
+            def wrapper(self): # the function that will be called as handler
                 reply = getattr(self, reply_name) # gets actual reply by its name (ex: self.GET_reply)
                 
                 err = reply.error()
