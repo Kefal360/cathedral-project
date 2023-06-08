@@ -1,5 +1,5 @@
 import typing
-from PyQt5 import QtCore, QtGui, QtWidgets #импорт нужный библиотек
+from PyQt5 import QtCore, QtGui, QtWidgets #импорт нужных библиотек
 from PyQt5 import uic
 from PyQt5.QtGui import QColor, QPalette
 from PyQt5.QtGui import QPixmap, QMouseEvent
@@ -345,9 +345,9 @@ class AppWindow(QMainWindow):
                         status_code = reply.attribute(QNetworkRequest.Attribute.HttpStatusCodeAttribute)
                         self.ui.textEdit_message.append(msg + f'сервер вернул статус код {status_code}')
 
-            return wrapper
+            return wrapper  #   вообще-то, имя этого киберспортсмена из hearthstone — Viper 
 
-        return inner #это не игрок в hearthstone
+        return inner    #   это не игрок в hearthstone
 
 
     @with_err_handling('POST_reply')
@@ -361,9 +361,9 @@ class AppWindow(QMainWindow):
     def handle_get_reply(self):
         res = self.GET_reply.readAll().data()
 
-        data = json.loads(res) #функция преобразования данных в объект питон
+        data = json.loads(res)  #    преобразование данных из джейсон 
         
-        self.ui.textEdit_message.append(json.dumps(data, separators=(',', ':'))) #выводим значение в line_edit
+        self.ui.textEdit_message.append(json.dumps(data, separators=(',', ':'))) #  вывод значение в line_edit
 
         # Update lamps
         for i in range(1,4):
